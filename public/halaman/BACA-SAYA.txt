@@ -1,0 +1,9 @@
+Letakkan 12 imej halaman buku di dalam folder ini.
+
+Nama fail: halaman-01 hingga halaman-12
+Format:    .webp, .jpg, .jpeg atau .png
+
+Contoh: halaman-01.webp, halaman-02.webp, ... halaman-12.webp
+
+Aplikasi akan mengesan imej secara automatik dan menggantikan placeholder.
+Panduan penuh: docs/PANDUAN-IMEJ.md

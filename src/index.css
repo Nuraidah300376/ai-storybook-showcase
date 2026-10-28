@@ -1,0 +1,88 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* Biru navy */
+  --color-navy-950: #050a18;
+  --color-navy-900: #0a1430;
+  --color-navy-800: #0f1d44;
+  --color-navy-700: #172a5c;
+  --color-navy-600: #213a7a;
+
+  /* Emas */
+  --color-emas-200: #f6e4b0;
+  --color-emas-300: #efd085;
+  --color-emas-400: #e3b64a;
+  --color-emas-500: #c99a2e;
+  --color-emas-600: #a07722;
+
+  /* Hijau zamrud */
+  --color-zamrud-300: #6ee7bf;
+  --color-zamrud-400: #34d39e;
+  --color-zamrud-500: #1fa37a;
+  --color-zamrud-600: #138161;
+  --color-zamrud-700: #0d5f48;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-navy-950 font-sans text-slate-100 antialiased;
+  }
+  ::selection {
+    @apply bg-emas-400 text-navy-950;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-emas-300;
+  }
+}
+
+@utility teks-emas {
+  background: linear-gradient(100deg, #f6e4b0 0%, #e3b64a 40%, #fff3cf 55%, #c99a2e 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility kaca {
+  @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+}
+@utility butang {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+@utility butang-emas {
+  @apply butang bg-gradient-to-b from-emas-300 to-emas-500 text-navy-950 shadow-[0_8px_30px_-8px_rgba(227,182,74,0.6)]
+    hover:from-emas-200 hover:to-emas-400;
+}
+@utility butang-zamrud {
+  @apply butang bg-gradient-to-b from-zamrud-400 to-zamrud-600 text-navy-950 shadow-[0_8px_30px_-8px_rgba(31,163,122,0.6)]
+    hover:from-zamrud-300 hover:to-zamrud-500;
+}
+@utility butang-hantu {
+  @apply butang border border-white/15 bg-white/5 text-slate-100 hover:border-emas-400/60 hover:bg-white/10;
+}
+@utility label-seksyen {
+  @apply inline-flex items-center gap-2 text-xs font-semibold tracking-[0.25em] text-emas-300 uppercase;
+}
+
+/* Tekstur bijirin halus untuk rasa sinematik. */
+.bijirin::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
