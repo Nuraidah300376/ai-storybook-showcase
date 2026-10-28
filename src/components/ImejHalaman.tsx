@@ -1,12 +1,38 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { HALAMAN, calonImej, namaFailImej, type Halaman } from '../data/buku'
+import { useImejDimuatNaik } from '../lib/storImej'
 import { IkonImej } from './Ikon'
 
 /**
- * Cache peringkat modul: nombor halaman → URL imej yang berjaya dimuat,
- * atau `null` jika tiada fail ditemui. Mengelakkan cubaan berulang.
+ * Cache peringkat modul bagi fail dalam `public/halaman/`: nombor halaman →
+ * URL imej yang berjaya dimuat, atau `null` jika tiada fail ditemui.
+ * Mengelakkan cubaan berulang dan memaklumkan Pengurus Halaman Buku.
  */
 const cache = new Map<number, string | null>()
+const pendengar = new Set<() => void>()
+
+function tetapkanCache(nombor: number, url: string | null) {
+  if (cache.get(nombor) === url) return
+  cache.set(nombor, url)
+  for (const p of pendengar) p()
+}
+
+function langgan(p: () => void) {
+  pendengar.add(p)
+  return () => pendengar.delete(p)
+}
+
+/**
+ * Fail asal dalam `public/halaman/` bagi satu halaman:
+ * URL jika wujud, `null` jika tiada, `undefined` jika belum disemak.
+ */
+export function useImejAsal(nombor: number): string | null | undefined {
+  return useSyncExternalStore(
+    langgan,
+    () => cache.get(nombor),
+    () => cache.get(nombor),
+  )
+}
 
 /**
  * Kenal pasti imej semua halaman lebih awal, supaya muka halaman yang muncul
@@ -19,11 +45,11 @@ export function pramuatImej() {
     const cuba = (i: number) => {
       if (cache.has(h.nombor)) return
       if (i >= calon.length) {
-        cache.set(h.nombor, null)
+        tetapkanCache(h.nombor, null)
         return
       }
       const img = new Image()
-      img.onload = () => cache.set(h.nombor, calon[i])
+      img.onload = () => tetapkanCache(h.nombor, calon[i])
       img.onerror = () => cuba(i + 1)
       img.src = calon[i]
     }
@@ -38,17 +64,51 @@ interface Props {
   className?: string
 }
 
+/**
+ * Imej satu halaman, dipaparkan penuh tanpa dipotong (object-contain).
+ *
+ * Keutamaan sumber: imej dimuat naik (Pengurus Halaman Buku) → fail dalam
+ * `public/halaman/` → placeholder berlabel.
+ */
 export function ImejHalaman(props: Props) {
-  // Kunci mengikut nombor halaman supaya keadaan cubaan direset apabila halaman bertukar.
-  return <ImejHalamanDalaman key={props.halaman.nombor} {...props} />
+  const dimuatNaik = useImejDimuatNaik(props.halaman.nombor)
+  // Kunci mengikut sumber supaya keadaan cubaan direset apabila halaman atau imej bertukar.
+  if (dimuatNaik) return <ImejHalamanDalaman key={dimuatNaik.url} {...props} calon={[dimuatNaik.url]} dimuatAwal />
+  return <ImejHalamanAsal key={props.halaman.nombor} {...props} />
 }
 
-function ImejHalamanDalaman({ halaman, saiz = 'besar', className = '' }: Props) {
-  const calon = calonImej(halaman.nombor)
-  const dicache = cache.get(halaman.nombor)
-  const [cubaan, setCubaan] = useState(() => (dicache ? calon.indexOf(dicache) : dicache === null ? calon.length : 0))
-  // Jika imej sudah dikenal pasti, paparkan terus (tanpa pudar) — penting semasa selakan.
-  const [dimuat, setDimuat] = useState(Boolean(dicache))
+function ImejHalamanAsal(props: Props) {
+  const calon = calonImej(props.halaman.nombor)
+  const dicache = cache.get(props.halaman.nombor)
+  return (
+    <ImejHalamanDalaman
+      {...props}
+      asal
+      calon={calon}
+      cubaanAwal={dicache ? calon.indexOf(dicache) : dicache === null ? calon.length : 0}
+      // Jika imej sudah dikenal pasti, paparkan terus (tanpa pudar) — penting semasa selakan.
+      dimuatAwal={Boolean(dicache)}
+    />
+  )
+}
+
+function ImejHalamanDalaman({
+  halaman,
+  saiz = 'besar',
+  className = '',
+  calon,
+  cubaanAwal = 0,
+  dimuatAwal,
+  asal = false,
+}: Props & {
+  calon: string[]
+  cubaanAwal?: number
+  dimuatAwal: boolean
+  /** Benar jika calon ialah fail dalam public/halaman/ (hasil cubaan dicache). */
+  asal?: boolean
+}) {
+  const [cubaan, setCubaan] = useState(cubaanAwal)
+  const [dimuat, setDimuat] = useState(dimuatAwal)
 
   const src = cubaan < calon.length ? calon[cubaan] : null
 
@@ -62,12 +122,13 @@ function ImejHalamanDalaman({ halaman, saiz = 'besar', className = '' }: Props) 
           alt={halaman.alt}
           draggable={false}
           onLoad={() => {
-            cache.set(halaman.nombor, src)
+            if (asal) tetapkanCache(halaman.nombor, src)
             setDimuat(true)
           }}
           onError={() => {
             const seterusnya = cubaan + 1
-            if (seterusnya >= calon.length) cache.set(halaman.nombor, null)
+            if (asal && seterusnya >= calon.length) tetapkanCache(halaman.nombor, null)
+            setDimuat(false)
             setCubaan(seterusnya)
           }}
           className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ease-out ${
@@ -109,16 +170,20 @@ function PlaceholderHalaman({
           {String(halaman.nombor).padStart(2, '0')}
         </span>
         {besar && (
-          <span className="text-sm font-semibold tracking-[0.2em] text-slate-200 uppercase sm:text-base">{halaman.label}</span>
+          <span className="[font-size:clamp(0.6rem,5cqw,1rem)] font-semibold tracking-[0.2em] text-slate-200 uppercase">
+            {halaman.label}
+          </span>
         )}
         {besar && (
           <>
-            <span className="inline-flex items-center gap-2 rounded-full border border-zamrud-400/30 bg-zamrud-500/10 px-3 py-1 text-xs text-zamrud-300">
+            <span className="inline-flex items-center gap-[0.5em] rounded-full border border-zamrud-400/30 bg-zamrud-500/10 px-[0.9em] py-[0.3em] [font-size:clamp(0.55rem,4cqw,0.75rem)] text-zamrud-300">
               <IkonImej /> Placeholder imej
             </span>
-            <code className="text-[0.7rem] text-slate-400 sm:text-xs">
-              public/halaman/{namaFailImej(halaman.nombor)}.webp | .jpg | .png
-            </code>
+            <span className="[font-size:clamp(0.5rem,3.6cqw,0.75rem)] leading-snug text-slate-400">
+              Muat naik di <span className="text-emas-200">Pengurus Halaman Buku</span>
+              <br />
+              atau letak <code className="text-slate-300">public/halaman/{namaFailImej(halaman.nombor)}.png</code>
+            </span>
           </>
         )}
       </div>

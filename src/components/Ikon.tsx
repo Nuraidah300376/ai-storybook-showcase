@@ -104,3 +104,52 @@ export const IkonBintang = (p: P) => (
     <path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z" fill="currentColor" stroke="none" />
   </Asas>
 )
+export const IkonMuatNaik = (p: P) => (
+  <Asas {...p}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <path d="m17 8-5-5-5 5M12 3v12" />
+  </Asas>
+)
+export const IkonMuatTurun = (p: P) => (
+  <Asas {...p}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <path d="m7 10 5 5 5-5M12 15V3" />
+  </Asas>
+)
+export const IkonGanti = (p: P) => (
+  <Asas {...p}>
+    <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" />
+    <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" />
+    <path d="M21 3v5h-5M3 21v-5h5" />
+  </Asas>
+)
+export const IkonMata = (p: P) => (
+  <Asas {...p}>
+    <path d="M2 12s3.5-8 10-8 10 8 10 8-3.5 8-10 8-10-8-10-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </Asas>
+)
+export const IkonTong = (p: P) => (
+  <Asas {...p}>
+    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+  </Asas>
+)
+export const IkonAmaran = (p: P) => (
+  <Asas {...p}>
+    <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+    <path d="M12 9v4M12 17h.01" />
+  </Asas>
+)
+export const IkonPangkalan = (p: P) => (
+  <Asas {...p}>
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5" />
+    <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3" />
+  </Asas>
+)
+export const IkonPakej = (p: P) => (
+  <Asas {...p}>
+    <path d="M21 8 12 3 3 8v8l9 5 9-5z" />
+    <path d="m3 8 9 5 9-5M12 13v8" />
+  </Asas>
+)

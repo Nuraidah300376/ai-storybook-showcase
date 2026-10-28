@@ -125,15 +125,28 @@ function KandunganSlaid({ slaid, orientasi, zum }: { slaid: Slaid; orientasi: Or
   return <SlaidBuku indeks={slaid.halaman.nombor - 1} orientasi={orientasi} zum={zum} />
 }
 
+/** Nisbah A5 potret (lebar ÷ tinggi). */
+const A5 = '148 / 210'
+
+/**
+ * Lebar buku dalam unit pentas (cqw/cqh): terbesar yang muat tanpa memotong
+ * halaman A5. Menegak = satu halaman; landskap = hamparan dua halaman.
+ */
+const LEBAR_BUKU = {
+  menegak: `min(88cqw, calc(76cqh * ${A5}))`,
+  landskap: `min(86cqw, calc(74cqh * 2 * ${A5}))`,
+} as const
+
 /**
  * Semua 12 halaman berkongsi satu buku yang kekal dipasang, supaya setiap
  * pertukaran slaid menjadi animasi selak halaman (bukan pudar).
  */
 function SlaidBuku({ indeks, orientasi, zum }: { indeks: number; orientasi: Orientasi; zum: number }) {
   const menegak = orientasi === 'menegak'
+  const lebar = LEBAR_BUKU[orientasi]
   return (
-    <div className={`flex h-full flex-col items-center ${menegak ? 'px-[6cqw] pt-[6.5cqh] pb-[5cqh]' : 'justify-center px-[5cqw] pt-[6cqh] pb-[4cqh]'}`}>
-      <div className={`flex w-full items-baseline justify-between ${menegak ? 'mb-[2.5cqh]' : 'mb-[4cqh] max-w-[86cqw]'}`}>
+    <div className="flex h-full flex-col items-center justify-center px-[5cqw] pt-[5cqh] pb-[3cqh]">
+      <div className="mb-[2.5cqh] flex items-baseline justify-between" style={{ width: lebar }}>
         <p className={`font-display text-white/85 italic ${menegak ? 'text-[4.2cqw]' : 'text-[1.9cqw]'}`}>{BUKU.tajuk}</p>
         <AnimatePresence mode="wait" initial={false}>
           <motion.p
@@ -149,17 +162,14 @@ function SlaidBuku({ indeks, orientasi, zum }: { indeks: number; orientasi: Orie
         </AnimatePresence>
       </div>
       {/* Zum perlahan mengikut kemajuan persembahan; berhenti apabila dijeda. */}
-      <div
-        className={menegak ? 'flex min-h-0 w-full flex-1 pl-[3cqw]' : 'w-[86cqw]'}
-        style={{ transform: `scale(${1 + 0.035 * zum})` }}
-      >
+      <div className={menegak ? 'pl-[2.5cqw]' : ''} style={{ width: lebar, transform: `scale(${1 + 0.035 * zum})` }}>
         <BukuSelak
           indeks={indeks}
           mod={menegak ? 'tunggal' : 'hamparan'}
-          konteks="persembahan"
           tempohMs={menegak ? 850 : 950}
           mulaDariJudul
-          className={menegak ? 'h-full w-full' : 'aspect-[8/3] w-full'}
+          serlah
+          className={menegak ? 'aspect-[148/210] w-full' : 'aspect-[296/210] w-full'}
         />
       </div>
     </div>

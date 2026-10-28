@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { SUDUT_TUNGGAL, sudutPutaran, susunMuka } from './selak'
+import { SUDUT_TUNGGAL, halamanPadaMuka, hamparanBagi, kedudukanBuku, sudutPutaran, susunMuka } from './selak'
 
 describe('susunMuka — hamparan', () => {
-  it('tanpa selakan memaparkan ilustrasi kiri dan teks kanan', () => {
+  it('tanpa selakan memaparkan muka kiri dan kanan hamparan yang sama', () => {
     expect(susunMuka('hamparan', 3, null)).toEqual({
       statik: [
         { sisi: 'kiri', indeks: 3 },
@@ -12,7 +12,7 @@ describe('susunMuka — hamparan', () => {
     })
   })
 
-  it('selak ke hadapan: helaian kanan membawa ilustrasi baharu di belakangnya', () => {
+  it('selak ke hadapan: helaian kanan membawa muka kiri hamparan baharu di belakangnya', () => {
     const s = susunMuka('hamparan', 3, { dari: 3, ke: 4 })
     expect(s.statik).toEqual([
       { sisi: 'kiri', indeks: 3 },
@@ -21,7 +21,7 @@ describe('susunMuka — hamparan', () => {
     expect(s.daun).toMatchObject({ pada: 'kanan', depan: { sisi: 'kanan', indeks: 3 }, belakang: { sisi: 'kiri', indeks: 4 } })
   })
 
-  it('selak ke belakang: helaian kiri membawa teks lama di belakangnya', () => {
+  it('selak ke belakang: helaian kiri membawa muka kanan hamparan sebelumnya di belakangnya', () => {
     const s = susunMuka('hamparan', 4, { dari: 4, ke: 3 })
     expect(s.statik).toEqual([
       { sisi: 'kiri', indeks: 3 },
@@ -69,5 +69,28 @@ describe('sudutPutaran', () => {
     const masuk = susunMuka('tunggal', 1, { dari: 1, ke: 0 }).daun!
     expect(sudutPutaran('tunggal', masuk, 0)).toBe(-SUDUT_TUNGGAL)
     expect(sudutPutaran('tunggal', masuk, SUDUT_TUNGGAL) + 0).toBe(0)
+  })
+})
+
+describe('hamparan dua halaman A5', () => {
+  it('memasangkan halaman 1–2, 3–4, …, 11–12', () => {
+    expect([-1, 0, 1, 2, 3, 10, 11].map(hamparanBagi)).toEqual([-1, 0, 0, 1, 1, 5, 5])
+    expect(kedudukanBuku('hamparan', 5)).toBe(2)
+    expect(kedudukanBuku('tunggal', 5)).toBe(5)
+  })
+
+  it('memetakan muka kepada indeks halaman', () => {
+    expect(halamanPadaMuka({ sisi: 'kiri', indeks: 0 })).toBe(0)
+    expect(halamanPadaMuka({ sisi: 'kanan', indeks: 0 })).toBe(1)
+    expect(halamanPadaMuka({ sisi: 'kiri', indeks: 5 })).toBe(10)
+    expect(halamanPadaMuka({ sisi: 'kanan', indeks: 5 })).toBe(11)
+    expect(halamanPadaMuka({ sisi: 'kanan', indeks: -1 })).toBe(-1)
+    expect(halamanPadaMuka({ sisi: 'penuh', indeks: 7 })).toBe(7)
+    expect(halamanPadaMuka({ sisi: 'belakang' })).toBeNull()
+  })
+
+  it('setiap halaman 1–12 muncul tepat sekali merentas semua hamparan', () => {
+    const muka = [0, 1, 2, 3, 4, 5].flatMap((s) => susunMuka('hamparan', s, null).statik.map(halamanPadaMuka))
+    expect(muka).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
   })
 })
