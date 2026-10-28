@@ -10,8 +10,12 @@ karya **Nuraidah binti Mustapah**.
 ## Ciri-ciri
 
 - Halaman pembukaan dengan animasi tajuk **SATU PROMPT, SEBUAH BUKU CERITA!**
-- Paparan buku interaktif 12 halaman (butang Sebelumnya/Seterusnya, kekunci anak panah, leretan sentuh, lakaran kecil).
-- Mod persembahan automatik dengan kawalan **Mula**, **Jeda** dan **Ulang**.
+- Paparan buku interaktif 12 halaman dengan **animasi selak halaman 3D**:
+  - komputer dan 16:9: buku terbuka dua muka (ilustrasi kiri, teks kanan), helaian berpusing di tulang tengah;
+  - telefon, tablet dan 9:16: halaman tunggal diselak dari tulang kiri;
+  - navigasi dengan butang Sebelumnya/Seterusnya, kekunci anak panah, ketik di tepi halaman, leretan sentuh dan lakaran kecil;
+  - klik berulang tidak bertindih: selakan semasa dipercepat, kemudian buku terus ke halaman sasaran.
+- Mod persembahan automatik dengan kawalan **Mula**, **Jeda** dan **Ulang**; setiap pertukaran halaman diselak, bermula dari halaman judul, dengan zum perlahan.
 - Mod paparan menegak **9:16** untuk rakaman TikTok (serta landskap 16:9), skrin penuh dan pilihan menyembunyikan kawalan.
 - Bahagian perkongsian master prompt dengan butang **Salin Prompt**.
 - Panduan memasukkan 12 imej sebenar (`docs/PANDUAN-IMEJ.md`).
@@ -64,5 +68,7 @@ src/
 ├── data/masterPrompt.ts ← master prompt (kini templat draf)
 ├── data/slaid.ts        ← urutan dan tempoh slaid persembahan
 ├── lib/autoplay.ts      ← logik persembahan automatik (diuji)
+├── lib/selak.ts         ← logik susunan muka animasi selak (diuji)
+├── components/buku/     ← buku selak 3D dan muka halaman
 └── components/          ← komponen antara muka
 ```

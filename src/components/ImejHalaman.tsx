@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { calonImej, namaFailImej, type Halaman } from '../data/buku'
+import { HALAMAN, calonImej, namaFailImej, type Halaman } from '../data/buku'
 import { IkonImej } from './Ikon'
 
 /**
@@ -8,13 +8,34 @@ import { IkonImej } from './Ikon'
  */
 const cache = new Map<number, string | null>()
 
+/**
+ * Kenal pasti imej semua halaman lebih awal, supaya muka halaman yang muncul
+ * semasa animasi selak terus memaparkan imej tanpa kelipan placeholder.
+ */
+export function pramuatImej() {
+  for (const h of HALAMAN) {
+    if (cache.has(h.nombor)) continue
+    const calon = calonImej(h.nombor)
+    const cuba = (i: number) => {
+      if (cache.has(h.nombor)) return
+      if (i >= calon.length) {
+        cache.set(h.nombor, null)
+        return
+      }
+      const img = new Image()
+      img.onload = () => cache.set(h.nombor, calon[i])
+      img.onerror = () => cuba(i + 1)
+      img.src = calon[i]
+    }
+    cuba(0)
+  }
+}
+
 interface Props {
   halaman: Halaman
   /** Saiz teks placeholder. */
   saiz?: 'kecil' | 'besar'
   className?: string
-  /** Kesan zum perlahan (Ken Burns) untuk mod persembahan. */
-  zum?: boolean
 }
 
 export function ImejHalaman(props: Props) {
@@ -22,11 +43,12 @@ export function ImejHalaman(props: Props) {
   return <ImejHalamanDalaman key={props.halaman.nombor} {...props} />
 }
 
-function ImejHalamanDalaman({ halaman, saiz = 'besar', className = '', zum = false }: Props) {
+function ImejHalamanDalaman({ halaman, saiz = 'besar', className = '' }: Props) {
   const calon = calonImej(halaman.nombor)
   const dicache = cache.get(halaman.nombor)
   const [cubaan, setCubaan] = useState(() => (dicache ? calon.indexOf(dicache) : dicache === null ? calon.length : 0))
-  const [dimuat, setDimuat] = useState(false)
+  // Jika imej sudah dikenal pasti, paparkan terus (tanpa pudar) — penting semasa selakan.
+  const [dimuat, setDimuat] = useState(Boolean(dicache))
 
   const src = cubaan < calon.length ? calon[cubaan] : null
 
@@ -48,9 +70,9 @@ function ImejHalamanDalaman({ halaman, saiz = 'besar', className = '', zum = fal
             if (seterusnya >= calon.length) cache.set(halaman.nombor, null)
             setCubaan(seterusnya)
           }}
-          className={`absolute inset-0 h-full w-full object-contain transition-[opacity,transform] ease-out ${
+          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ease-out ${
             dimuat ? 'opacity-100' : 'opacity-0'
-          } ${zum && dimuat ? 'scale-[1.06] duration-[7000ms]' : 'scale-100 duration-700'}`}
+          }`}
         />
       )}
     </div>
