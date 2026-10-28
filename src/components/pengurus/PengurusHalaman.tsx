@@ -29,6 +29,7 @@ export function PengurusHalaman({ onLihatDalamBuku }: Props) {
   const [mesej, setMesej] = useState<Mesej[]>([])
   const [pratonton, setPratonton] = useState<number | null>(null)
   const [seret, setSeret] = useState(false)
+  const [sahBuang, setSahBuang] = useState(false)
   const inputBerbilang = useRef<HTMLInputElement>(null)
   const inputSlot = useRef<HTMLInputElement>(null)
   const inputPakej = useRef<HTMLInputElement>(null)
@@ -81,17 +82,18 @@ export function PengurusHalaman({ onLihatDalamBuku }: Props) {
     void jalankan('Menyediakan pakej…', async () => {
       const hasil = await eksportPakej(asalWujud)
       if (!hasil) return [{ jenis: 'ralat', teks: 'Tiada imej untuk dieksport.' }]
-      muatTurun(hasil.zip, NAMA_PAKEJ)
-      return [
-        {
-          jenis: 'berjaya',
-          teks: `Pakej ${NAMA_PAKEJ} (${hasil.bilangan} imej, ${formatSaiz(hasil.zip.size)}) dimuat turun. Simpan fail ini sebagai sandaran.`,
-        },
-      ]
+      const ringkas = `${NAMA_PAKEJ} (${hasil.bilangan} imej, ${formatSaiz(hasil.zip.size)})`
+      const status = await muatTurun(hasil.zip, NAMA_PAKEJ)
+      if (status === 'ditolak') return [{ jenis: 'amaran', teks: `Muat turun pakej ${ringkas} dibatalkan.` }]
+      if (status === 'gagal') {
+        return [{ jenis: 'ralat', teks: `Pakej ${ringkas} tidak dapat dimuat turun dalam paparan ini. Cuba buka aplikasi dalam tab pelayar biasa.` }]
+      }
+      return [{ jenis: 'berjaya', teks: `Pakej ${ringkas} dimuat turun. Simpan fail ini sebagai sandaran.` }]
     })
 
+  // Pengesahan dalam halaman (bukan window.confirm, yang disekat dalam sesetengah bingkai seperti Artifact).
   const buangSemua = () => {
-    if (!window.confirm(`Buang semua ${bilanganDimuatNaik} imej yang dimuat naik daripada pelayar ini? Tindakan ini tidak boleh dibatalkan.`)) return
+    setSahBuang(false)
     void jalankan('Membuang…', async () => {
       await buangSemuaImej()
       return [{ jenis: 'berjaya', teks: 'Semua imej yang dimuat naik telah dibuang daripada storan pelayar.' }]
@@ -170,14 +172,30 @@ export function PengurusHalaman({ onLihatDalamBuku }: Props) {
               <button type="button" className="butang-hantu flex-1" onClick={() => inputPakej.current?.click()} disabled={!!sibuk}>
                 <IkonPakej /> Import Pakej
               </button>
-              <button
-                type="button"
-                className="butang-hantu w-full text-rose-200 hover:border-rose-400/60"
-                onClick={buangSemua}
-                disabled={!!sibuk || bilanganDimuatNaik === 0}
-              >
-                <IkonTong /> Buang Semua Muat Naik
-              </button>
+              {sahBuang ? (
+                <div role="alertdialog" aria-label="Sahkan buang semua" className="w-full rounded-2xl border border-rose-400/40 bg-rose-500/10 p-3 text-sm">
+                  <p className="text-rose-100">
+                    Buang semua {bilanganDimuatNaik} imej yang dimuat naik daripada pelayar ini? Tindakan ini tidak boleh dibatalkan.
+                  </p>
+                  <div className="mt-3 flex gap-2">
+                    <button type="button" className="butang-hantu min-h-9 flex-1 border-rose-400/60 text-rose-100" onClick={buangSemua}>
+                      <IkonTong /> Ya, buang semua
+                    </button>
+                    <button type="button" className="butang-hantu min-h-9 flex-1" onClick={() => setSahBuang(false)}>
+                      Batal
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="butang-hantu w-full text-rose-200 hover:border-rose-400/60"
+                  onClick={() => setSahBuang(true)}
+                  disabled={!!sibuk || bilanganDimuatNaik === 0}
+                >
+                  <IkonTong /> Buang Semua Muat Naik
+                </button>
+              )}
             </div>
           </div>
         </div>
