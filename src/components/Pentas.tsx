@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { BUKU, JUMLAH_HALAMAN } from '../data/buku'
 import { SLAID, type Slaid } from '../data/slaid'
-import { ImejHalaman } from './ImejHalaman'
+import { BukuSelak } from './buku/BukuSelak'
 import { TajukAnimasi } from './TajukAnimasi'
 
 export type Orientasi = 'menegak' | 'landskap'
@@ -20,6 +20,8 @@ interface Props {
  */
 export function Pentas({ indeks, sesi, kemajuan, orientasi }: Props) {
   const slaid = SLAID[indeks]
+  // Kemajuan keseluruhan bahagian buku (0..1) untuk kesan zum perlahan.
+  const zum = slaid.jenis === 'halaman' ? Math.min(1, (slaid.halaman.nombor - 1 + kemajuan) / JUMLAH_HALAMAN) : 0
   return (
     <div className="bijirin relative h-full w-full overflow-hidden bg-navy-950 [container-type:size]">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(33,58,122,0.6),transparent_65%)]" />
@@ -40,21 +42,21 @@ export function Pentas({ indeks, sesi, kemajuan, orientasi }: Props) {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={`${sesi}-${indeks}`}
+          key={`${sesi}-${slaid.jenis === 'halaman' ? 'buku' : indeks}`}
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-0"
         >
-          <KandunganSlaid slaid={slaid} orientasi={orientasi} />
+          <KandunganSlaid slaid={slaid} orientasi={orientasi} zum={zum} />
         </motion.div>
       </AnimatePresence>
     </div>
   )
 }
 
-function KandunganSlaid({ slaid, orientasi }: { slaid: Slaid; orientasi: Orientasi }) {
+function KandunganSlaid({ slaid, orientasi, zum }: { slaid: Slaid; orientasi: Orientasi; zum: number }) {
   const menegak = orientasi === 'menegak'
 
   if (slaid.jenis === 'pembukaan') {
@@ -120,39 +122,45 @@ function KandunganSlaid({ slaid, orientasi }: { slaid: Slaid; orientasi: Orienta
     )
   }
 
-  const { halaman } = slaid
-  const label = (
-    <p className={`font-semibold tracking-[0.25em] text-emas-300 uppercase ${menegak ? 'text-[3cqw]' : 'text-[1.3cqw]'}`}>
-      {halaman.label} / {JUMLAH_HALAMAN}
-    </p>
-  )
-  const teks = halaman.teks && (
-    <p className={`font-display leading-snug text-white ${menegak ? 'text-[5cqw]' : 'text-[2.3cqw]'}`}>{halaman.teks}</p>
-  )
-  const imej = (
-    <div className="relative h-full w-full overflow-hidden rounded-[2cqw] border border-emas-400/30 shadow-2xl shadow-black/60">
-      <ImejHalaman halaman={halaman} className="h-full w-full" zum />
-    </div>
-  )
+  return <SlaidBuku indeks={slaid.halaman.nombor - 1} orientasi={orientasi} zum={zum} />
+}
 
-  if (menegak) {
-    return (
-      <div className="flex h-full flex-col px-[6cqw] pt-[7cqh] pb-[6cqh]">
-        {label}
-        <p className="font-display mt-[0.6cqh] text-[4.4cqw] text-white/80 italic">{BUKU.tajuk}</p>
-        <div className="mt-[3cqh] min-h-0 flex-1">{imej}</div>
-        {teks && <div className="mt-[3cqh]">{teks}</div>}
-      </div>
-    )
-  }
-
+/**
+ * Semua 12 halaman berkongsi satu buku yang kekal dipasang, supaya setiap
+ * pertukaran slaid menjadi animasi selak halaman (bukan pudar).
+ */
+function SlaidBuku({ indeks, orientasi, zum }: { indeks: number; orientasi: Orientasi; zum: number }) {
+  const menegak = orientasi === 'menegak'
   return (
-    <div className="grid h-full grid-cols-[1.6fr_1fr] items-center gap-[4cqw] px-[5cqw] pt-[7cqh] pb-[6cqh]">
-      <div className="h-full min-h-0">{imej}</div>
-      <div className="space-y-[2cqh]">
-        {label}
-        <p className="font-display text-[2.4cqw] text-white/80 italic">{BUKU.tajuk}</p>
-        {teks}
+    <div className={`flex h-full flex-col items-center ${menegak ? 'px-[6cqw] pt-[6.5cqh] pb-[5cqh]' : 'justify-center px-[5cqw] pt-[6cqh] pb-[4cqh]'}`}>
+      <div className={`flex w-full items-baseline justify-between ${menegak ? 'mb-[2.5cqh]' : 'mb-[4cqh] max-w-[86cqw]'}`}>
+        <p className={`font-display text-white/85 italic ${menegak ? 'text-[4.2cqw]' : 'text-[1.9cqw]'}`}>{BUKU.tajuk}</p>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.p
+            key={indeks}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25 }}
+            className={`font-semibold tracking-[0.25em] text-emas-300 uppercase tabular-nums ${menegak ? 'text-[2.8cqw]' : 'text-[1.1cqw]'}`}
+          >
+            {indeks + 1} / {JUMLAH_HALAMAN}
+          </motion.p>
+        </AnimatePresence>
+      </div>
+      {/* Zum perlahan mengikut kemajuan persembahan; berhenti apabila dijeda. */}
+      <div
+        className={menegak ? 'flex min-h-0 w-full flex-1 pl-[3cqw]' : 'w-[86cqw]'}
+        style={{ transform: `scale(${1 + 0.035 * zum})` }}
+      >
+        <BukuSelak
+          indeks={indeks}
+          mod={menegak ? 'tunggal' : 'hamparan'}
+          konteks="persembahan"
+          tempohMs={menegak ? 850 : 950}
+          mulaDariJudul
+          className={menegak ? 'h-full w-full' : 'aspect-[8/3] w-full'}
+        />
       </div>
     </div>
   )

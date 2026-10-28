@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { pramuatImej } from './components/ImejHalaman'
 import { Kredit } from './components/Kredit'
 import { LatarSinematik } from './components/LatarSinematik'
 import { ModPersembahan } from './components/ModPersembahan'
@@ -13,6 +14,9 @@ import { SeksyenPrompt } from './components/SeksyenPrompt'
 
 export default function App() {
   const [persembahan, setPersembahan] = useState<Orientasi | null>(null)
+
+  // Kenal pasti imej halaman lebih awal supaya animasi selak tidak berkelip.
+  useEffect(() => pramuatImej(), [])
 
   return (
     <>
