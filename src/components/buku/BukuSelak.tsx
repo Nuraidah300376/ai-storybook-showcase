@@ -1,7 +1,16 @@
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type AnimationPlaybackControls } from 'motion/react'
 import { memo, useEffect, useRef, useState, type ReactNode } from 'react'
-import { sudutMaks, sudutPutaran, susunMuka, type Daun, type ModBuku, type Selakan } from '../../lib/selak'
-import { MukaHalaman, type KonteksBuku } from './MukaHalaman'
+import {
+  halamanPadaMuka,
+  kedudukanBuku,
+  sudutMaks,
+  sudutPutaran,
+  susunMuka,
+  type Daun,
+  type ModBuku,
+  type Selakan,
+} from '../../lib/selak'
+import { MukaHalaman } from './MukaHalaman'
 
 /** Lengkung selak: angkat perlahan, pusing laju, mendarat lembut. */
 const LENGKUNG = [0.5, 0.05, 0.25, 1] as const
@@ -10,51 +19,59 @@ interface Props {
   /** Halaman sasaran (0..11). Buku menyelak ke sini apabila nilai ini berubah. */
   indeks: number
   mod: ModBuku
-  konteks: KonteksBuku
   /** Tempoh satu selakan dalam milisaat. */
   tempohMs?: number
   /** Mula dari halaman judul dan terus selak ke `indeks` (untuk mod persembahan). */
   mulaDariJudul?: boolean
   /** Ketik sisi kiri/kanan atau leret untuk menyelak (mod baca). */
   onNavigasi?: (arah: 1 | -1) => void
+  /** Hamparan sahaja: serlahkan halaman `indeks` dengan bingkai emas (mod persembahan). */
+  serlah?: boolean
   className?: string
 }
 
 /**
- * Buku dengan animasi selak halaman 3D.
+ * Buku dengan animasi selak halaman 3D. Setiap muka ialah satu halaman A5 potret.
  *
- * - `hamparan`: buku terbuka dua muka; helaian berpusing 180° di tulang tengah.
+ * - `hamparan`: buku terbuka dua muka (halaman 1–2, 3–4, …); helaian berpusing
+ *   180° di tulang tengah.
  * - `tunggal`: satu halaman; helaian diangkat dari tulang kiri.
  *
  * Klik berulang tidak bertindih: selakan semasa dipercepat, kemudian buku
  * menyelak terus ke halaman sasaran terkini.
  */
-export const BukuSelak = memo(function BukuSelak({
+export const BukuSelak = memo(function BukuSelak(props: Props) {
+  // Kedudukan buku diukur dalam unit berbeza bagi setiap mod; mula semula apabila mod bertukar.
+  return <BukuSelakDalaman key={props.mod} {...props} />
+})
+
+function BukuSelakDalaman({
   indeks,
   mod,
-  konteks,
   tempohMs = 750,
   mulaDariJudul = false,
   onNavigasi,
+  serlah = false,
   className = '',
 }: Props) {
   const kurangGerak = useReducedMotion()
   const akar = useRef<HTMLDivElement>(null)
   const berseret = useRef(false)
-  const [paparan, setPaparan] = useState(mulaDariJudul ? -1 : indeks)
+  const sasaran = kedudukanBuku(mod, indeks)
+  const [paparan, setPaparan] = useState(mulaDariJudul ? -1 : sasaran)
   const [selakan, setSelakan] = useState<Selakan | null>(null)
 
   // Mulakan selakan baharu apabila sasaran berbeza dan tiada selakan berjalan.
   useEffect(() => {
-    if (selakan || indeks === paparan) return
+    if (selakan || sasaran === paparan) return
     if (kurangGerak) {
-      setPaparan(indeks)
+      setPaparan(sasaran)
       return
     }
     // Jeda singkat pada halaman judul supaya penonton sempat membacanya.
-    const t = window.setTimeout(() => setSelakan({ dari: paparan, ke: indeks }), paparan < 0 ? 600 : 0)
+    const t = window.setTimeout(() => setSelakan({ dari: paparan, ke: sasaran }), paparan < 0 ? 600 : 0)
     return () => window.clearTimeout(t)
-  }, [indeks, paparan, selakan, kurangGerak])
+  }, [sasaran, paparan, selakan, kurangGerak])
 
   const susunan = susunMuka(mod, paparan, selakan)
   const hamparan = mod === 'hamparan'
@@ -112,17 +129,25 @@ export const BukuSelak = memo(function BukuSelak({
         {hamparan ? (
           <>
             <Kertas pada="kiri">
-              <MukaHalaman muka={susunan.statik[0]} mod={mod} konteks={konteks} />
+              <MukaHalaman muka={susunan.statik[0]} mod={mod} />
             </Kertas>
             <Kertas pada="kanan">
-              <MukaHalaman muka={susunan.statik[1]} mod={mod} konteks={konteks} />
+              <MukaHalaman muka={susunan.statik[1]} mod={mod} />
             </Kertas>
             {/* Tulang buku */}
             <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[0.5cqw] -translate-x-1/2 bg-gradient-to-r from-transparent via-black/50 to-transparent" />
+            {serlah && (
+              <div
+                aria-hidden="true"
+                className={`pointer-events-none absolute inset-y-0 w-1/2 rounded-[0.8cqw] shadow-[0_0_0_0.3cqw_rgba(239,208,133,0.85),0_0_3cqw_rgba(227,182,74,0.45)] transition-[left,opacity] duration-500 ease-out ${
+                  halamanPadaMuka(susunan.statik[1]) === indeks ? 'left-1/2' : 'left-0'
+                } ${selakan || paparan < 0 ? 'opacity-0' : 'opacity-100'}`}
+              />
+            )}
           </>
         ) : (
           <Kertas pada="penuh">
-            <MukaHalaman muka={susunan.statik[0]} mod={mod} konteks={konteks} />
+            <MukaHalaman muka={susunan.statik[0]} mod={mod} />
           </Kertas>
         )}
 
@@ -131,9 +156,8 @@ export const BukuSelak = memo(function BukuSelak({
             key={`${mod}:${selakan.dari}>${selakan.ke}`}
             daun={susunan.daun}
             mod={mod}
-            konteks={konteks}
             tempohMs={tempohMs}
-            dipercepat={indeks !== selakan.ke}
+            dipercepat={sasaran !== selakan.ke}
             onSelesai={() => {
               setPaparan(selakan.ke)
               setSelakan(null)
@@ -151,7 +175,7 @@ export const BukuSelak = memo(function BukuSelak({
       )}
     </motion.div>
   )
-})
+}
 
 const KEDUDUKAN = {
   kiri: 'left-0 w-1/2 rounded-l-[0.8cqw]',
@@ -187,14 +211,13 @@ function LapisanHelaian({ hamparan }: { hamparan: boolean }) {
 interface HelaianProps {
   daun: Daun
   mod: ModBuku
-  konteks: KonteksBuku
   tempohMs: number
   dipercepat: boolean
   onSelesai: () => void
 }
 
 /** Helaian yang sedang diselak. Setiap selakan ialah instans baharu (nilai sudut bermula dari 0). */
-function Helaian({ daun, mod, konteks, tempohMs, dipercepat, onSelesai }: HelaianProps) {
+function Helaian({ daun, mod, tempohMs, dipercepat, onSelesai }: HelaianProps) {
   const maks = sudutMaks(mod)
   const sudut = useMotionValue(0)
   const kawalan = useRef<AnimationPlaybackControls | null>(null)
@@ -258,7 +281,7 @@ function Helaian({ daun, mod, konteks, tempohMs, dipercepat, onSelesai }: Helaia
         style={{ rotateY: putar, transformOrigin: asal }}
       >
         <Sisi>
-          <MukaHalaman muka={daun.depan} mod={mod} konteks={konteks} />
+          <MukaHalaman muka={daun.depan} mod={mod} />
           <motion.div style={{ opacity: bayangDepan }} className={`absolute inset-0 ${arahBayang} from-black/70 to-black/20`} />
           <motion.div
             style={{ opacity: kilau }}
@@ -266,7 +289,7 @@ function Helaian({ daun, mod, konteks, tempohMs, dipercepat, onSelesai }: Helaia
           />
         </Sisi>
         <Sisi belakang>
-          <MukaHalaman muka={daun.belakang} mod={mod} konteks={konteks} />
+          <MukaHalaman muka={daun.belakang} mod={mod} />
           <motion.div style={{ opacity: bayangBelakang }} className={`absolute inset-0 ${arahBayang} from-black/20 to-black/70`} />
         </Sisi>
       </motion.div>

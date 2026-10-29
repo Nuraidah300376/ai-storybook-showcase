@@ -21,3 +21,10 @@ describe('data buku', () => {
     ])
   })
 })
+
+describe('label halaman', () => {
+  it('berlabel Halaman 01 hingga Halaman 12', () => {
+    expect(HALAMAN[0].label).toBe('Halaman 01')
+    expect(HALAMAN[11].label).toBe('Halaman 12')
+  })
+})

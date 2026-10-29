@@ -1,9 +1,13 @@
 /**
  * Maklumat buku dan senarai 12 halaman.
  *
- * Imej halaman TIDAK disertakan. Setiap halaman akan cuba memuatkan fail
- * `public/halaman/halaman-XX.(webp|jpg|jpeg|png)`. Jika fail belum wujud,
- * placeholder berlabel dipaparkan. Lihat docs/PANDUAN-IMEJ.md.
+ * Setiap halaman ialah satu imej A5 potret penuh (ilustrasi dan teks cerita
+ * sudah terkandung dalam imej). Imej TIDAK disertakan dalam repositori.
+ * Sumber imej mengikut keutamaan:
+ *   1. imej yang dimuat naik melalui Pengurus Halaman Buku (storan pelayar);
+ *   2. fail `public/halaman/halaman-XX.(webp|jpg|jpeg|png)`;
+ *   3. placeholder berlabel.
+ * Lihat docs/PANDUAN-IMEJ.md.
  */
 
 export const BUKU = {
@@ -21,13 +25,8 @@ export const SAMBUNGAN_IMEJ = ['webp', 'jpg', 'jpeg', 'png'] as const
 export interface Halaman {
   /** Nombor halaman bermula dari 1. */
   nombor: number
-  /** Label pendek yang dipaparkan pada placeholder dan lakaran kecil. */
+  /** Label pendek, contohnya "Halaman 01". */
   label: string
-  /**
-   * Teks cerita halaman ini. Biarkan `null` sehingga teks sebenar dimasukkan;
-   * antara muka akan memaparkan nota "teks belum dimasukkan".
-   */
-  teks: string | null
   /** Teks alternatif untuk pembaca skrin apabila imej sebenar dimasukkan. */
   alt: string
 }
@@ -40,8 +39,7 @@ export const HALAMAN: Halaman[] = Array.from({ length: JUMLAH_HALAMAN }, (_, i) 
   const nombor = i + 1
   return {
     nombor,
-    label: `Halaman ${nombor}`,
-    teks: null,
+    label: `Halaman ${String(nombor).padStart(2, '0')}`,
     alt: `Ilustrasi halaman ${nombor} buku ${BUKU.tajuk}`,
   }
 })

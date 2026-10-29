@@ -3,6 +3,7 @@ import { IkonBuku, IkonTelefon } from './Ikon'
 
 const PAUTAN = [
   { href: '#buku', label: 'Buku' },
+  { href: '#pengurus', label: 'Pengurus Halaman' },
   { href: '#persembahan', label: 'Persembahan' },
   { href: '#prompt', label: 'Master Prompt' },
   { href: '#panduan', label: 'Panduan' },
@@ -28,7 +29,7 @@ export function Navbar({ onTikTok }: { onTikTok: () => void }) {
             AI Storybook <span className="text-emas-300">Showcase</span>
           </span>
         </a>
-        <ul className="hidden items-center gap-1 text-sm text-slate-300 md:flex">
+        <ul className="hidden items-center gap-1 text-sm whitespace-nowrap text-slate-300 lg:flex">
           {PAUTAN.map((p) => (
             <li key={p.href}>
               <a href={p.href} className="rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-white">

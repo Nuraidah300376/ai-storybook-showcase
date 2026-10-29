@@ -1,0 +1,13 @@
+PRATONTON AI STORYBOOK SHOWCASE — TANPA NODE.JS
+
+1. Muat turun fail index.html dalam folder ini.
+2. Klik dua kali untuk membukanya dalam Chrome, Edge, Firefox atau Safari.
+   Tiada pemasangan atau sambungan internet diperlukan.
+3. Muat naik 12 imej melalui bahagian PENGURUS HALAMAN BUKU.
+
+Imej yang dimuat naik disimpan dalam storan pelayar pada komputer itu sahaja.
+
+Pilihan: letakkan folder halaman/ (berisi halaman-01.png ... halaman-12.png)
+di sebelah index.html untuk memaparkan imej tanpa muat naik.
+
+Fail ini dijana dengan: npm run binaan:pratonton

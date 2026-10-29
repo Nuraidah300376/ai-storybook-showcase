@@ -1,17 +1,24 @@
 /**
  * Logik tulen untuk animasi selak halaman.
  *
- * Indeks halaman bermula dari 0. Indeks -1 mewakili halaman judul
- * (dipaparkan sebelum halaman pertama dalam mod persembahan).
+ * Setiap halaman ialah satu imej A5 potret penuh (ilustrasi dan teks sudah
+ * terkandung dalam imej).
+ *
+ * - `tunggal`: kedudukan buku = indeks halaman (0..11).
+ * - `hamparan`: kedudukan buku = indeks hamparan dua muka (0..5); hamparan s
+ *   memaparkan halaman 2s di kiri dan 2s+1 di kanan.
+ *
+ * Kedudukan -1 mewakili halaman judul (dipaparkan sebelum halaman pertama
+ * dalam mod persembahan).
  */
 
 export type ModBuku = 'hamparan' | 'tunggal'
 
 /** Muka yang boleh dilukis pada sekeping kertas. */
 export type Muka =
-  | { sisi: 'kiri'; indeks: number } // ilustrasi (hamparan)
-  | { sisi: 'kanan'; indeks: number } // teks (hamparan)
-  | { sisi: 'penuh'; indeks: number } // ilustrasi + teks (tunggal)
+  | { sisi: 'kiri'; indeks: number } // muka kiri hamparan `indeks`
+  | { sisi: 'kanan'; indeks: number } // muka kanan hamparan `indeks`
+  | { sisi: 'penuh'; indeks: number } // halaman `indeks` (tunggal)
   | { sisi: 'belakang' } // belakang kertas kosong
 
 export interface Selakan {
@@ -41,6 +48,26 @@ export function sudutMaks(mod: ModBuku): number {
   return mod === 'hamparan' ? 180 : SUDUT_TUNGGAL
 }
 
+/** Hamparan yang memaparkan halaman `indeks`: halaman 1–2 → 0, 3–4 → 1, …; judul (-1) → -1. */
+export function hamparanBagi(indeks: number): number {
+  return indeks < 0 ? -1 : Math.floor(indeks / 2)
+}
+
+/** Kedudukan buku bagi halaman `indeks` dalam mod tertentu. */
+export function kedudukanBuku(mod: ModBuku, indeks: number): number {
+  return mod === 'hamparan' ? hamparanBagi(indeks) : indeks
+}
+
+/**
+ * Indeks halaman yang dilukis pada satu muka, atau -1 untuk halaman judul /
+ * kertas hujung. `null` untuk belakang kertas kosong.
+ */
+export function halamanPadaMuka(muka: Muka): number | null {
+  if (muka.sisi === 'belakang') return null
+  if (muka.sisi === 'penuh' || muka.indeks < 0) return muka.indeks
+  return muka.indeks * 2 + (muka.sisi === 'kanan' ? 1 : 0)
+}
+
 const kiri = (indeks: number): Muka => ({ sisi: 'kiri', indeks })
 const kanan = (indeks: number): Muka => ({ sisi: 'kanan', indeks })
 const penuh = (indeks: number): Muka => ({ sisi: 'penuh', indeks })
@@ -52,13 +79,13 @@ export function susunMuka(mod: ModBuku, paparan: number, selakan: Selakan | null
     if (!selakan) return { statik: [kiri(paparan), kanan(paparan)], daun: null }
     const { dari, ke } = selakan
     if (ke > dari) {
-      // Helaian kanan berpusing ke kiri: depan = teks lama, belakang = ilustrasi baharu.
+      // Helaian kanan berpusing ke kiri: depan = muka kanan lama, belakang = muka kiri baharu.
       return {
         statik: [kiri(dari), kanan(ke)],
         daun: { pada: 'kanan', depan: kanan(dari), belakang: kiri(ke), masuk: false },
       }
     }
-    // Helaian kiri berpusing ke kanan: depan = ilustrasi lama, belakang = teks baharu.
+    // Helaian kiri berpusing ke kanan: depan = muka kiri lama, belakang = muka kanan baharu.
     return {
       statik: [kiri(ke), kanan(dari)],
       daun: { pada: 'kiri', depan: kiri(dari), belakang: kanan(ke), masuk: false },
