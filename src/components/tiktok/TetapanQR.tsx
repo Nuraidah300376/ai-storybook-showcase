@@ -1,19 +1,13 @@
 import { useState, type FormEvent } from 'react'
 import { useUrlPrompt } from '../../hooks/useUrlPrompt'
+import { muatTurun } from '../../lib/muatTurun'
 import { svgQR } from '../../lib/qr'
 import { sahkanUrlAwam } from '../../lib/urlAwam'
 import { IkonAmaran, IkonMuatTurun, IkonTanda } from '../Ikon'
 import { KodQR } from './KodQR'
 
 function muatTurunSVG(url: string) {
-  const blob = new Blob([svgQR(url)], { type: 'image/svg+xml' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = 'kod-qr-master-prompt.svg'
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  window.setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+  void muatTurun(new Blob([svgQR(url)], { type: 'image/svg+xml' }), 'kod-qr-master-prompt.svg')
 }
 
 /** Panel menetapkan URL awam perkongsian prompt dan pratonton kod QR. */

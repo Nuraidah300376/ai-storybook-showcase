@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { BUKU } from '../data/buku'
 import { LOKASI_FAIL_PROMPT, MASTER_PROMPT, PROMPT_TERSEDIA, TAJUK_PROMPT } from '../data/masterPrompt'
 import { useSalin } from '../hooks/useSalin'
+import { muatTurun } from '../lib/muatTurun'
 import { statistikPrompt } from '../lib/prompt'
 import { IkonAmaran, IkonBuku, IkonMuatTurun, IkonSalin, IkonTanda } from './Ikon'
 
@@ -18,15 +19,8 @@ function bacaSaiz(): number {
   }
 }
 
-function muatTurun() {
-  const blob = new Blob([MASTER_PROMPT + '\n'], { type: 'text/plain;charset=utf-8' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = 'master-prompt-amanah-kecil-hati-besar.txt'
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  window.setTimeout(() => URL.revokeObjectURL(a.href), 1000)
+function muatTurunPrompt() {
+  void muatTurun(new Blob([MASTER_PROMPT + '\n'], { type: 'text/plain;charset=utf-8' }), 'master-prompt-amanah-kecil-hati-besar.txt')
 }
 
 /**
@@ -135,7 +129,7 @@ export function HalamanMasterPrompt({ pautanUtama }: { pautanUtama: string }) {
             >
               {status === 'berjaya' ? <IkonTanda /> : <IkonSalin />} {labelSalin}
             </button>
-            <button type="button" onClick={muatTurun} className="butang-hantu min-h-12 px-3" aria-label="Muat turun fail .txt" title="Muat turun .txt">
+            <button type="button" onClick={muatTurunPrompt} className="butang-hantu min-h-12 px-3" aria-label="Muat turun fail .txt" title="Muat turun .txt">
               <IkonMuatTurun />
             </button>
             <div role="group" aria-label="Saiz teks" className="flex">
