@@ -1,0 +1,21 @@
+================================================================================
+ MASTER PROMPT PREMIUM — BUKU CERITA BERGAMBAR BERHALAMAN
+ Lokasi untuk memasukkan master prompt ASAL yang lengkap.
+================================================================================
+
+CARA MENGISI (baca dahulu):
+
+1. Tampal master prompt asal anda yang LENGKAP di antara dua baris penanda
+   "MULA MASTER PROMPT" dan "TAMAT MASTER PROMPT" di bawah.
+2. Jangan padam atau ubah dua baris penanda itu.
+3. Semua teks di luar penanda (termasuk arahan ini) TIDAK dipaparkan kepada
+   penonton dan TIDAK disalin.
+4. Simpan fail, commit dan push. Halaman MASTER PROMPT PENUH akan memaparkan
+   teks anda tepat seperti yang ditampal (baris, jarak dan simbol dikekalkan).
+
+Selagi ruang di bawah kosong, aplikasi memaparkan status
+"MASTER PROMPT BELUM DIMASUKKAN" dan butang Salin dinyahaktifkan.
+
+=== MULA MASTER PROMPT ===
+
+=== TAMAT MASTER PROMPT ===

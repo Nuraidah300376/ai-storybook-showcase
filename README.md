@@ -5,10 +5,39 @@ karya **Nuraidah binti Mustapah**.
 
 > **Pembangun:** Nuraidah binti Mustapah
 
-**Status: Fasa 2** — Pengurus Halaman Buku: muat naik, ganti, pratonton, eksport dan import 12 imej halaman A5 terus dalam aplikasi.
+**Status: Fasa 3** — TikTok Cinematic Showcase 9:16 (60 saat, 1080×1920), halaman MASTER PROMPT PENUH dan kod QR perkongsian.
+Fungsi Fasa 1 dan Fasa 2 dikekalkan.
 
 > **Pratonton tanpa Node.js:** muat turun [`pratonton/index.html`](pratonton/index.html) dan klik dua kali.
 > Panduan ringkas: [`docs/PANDUAN-PENGGUNA.md`](docs/PANDUAN-PENGGUNA.md).
+> Menerbitkan laman master prompt untuk kod QR: [`docs/PANDUAN-GITHUB-PAGES.md`](docs/PANDUAN-GITHUB-PAGES.md).
+
+## Fasa 3 — TikTok Cinematic Showcase
+
+- Mod khas **9:16** pada kawasan asas **1080×1920**, diskalakan untuk muat pada komputer dan telefon. Buka melalui
+  butang **Mod TikTok 9:16** atau `#/showcase` pada hujung URL.
+- Persembahan **60 saat**:
+
+  | Saat | Kandungan |
+  | --- | --- |
+  | 0–5 | Hook **SATU PROMPT, SEBUAH BUKU CERITA!** |
+  | 5–12 | Kulit hadapan (halaman 1) dengan kamera 3D condong → rata dan sapuan cahaya |
+  | 12–35 | Animasi selak 3D halaman 2 hingga 12 dengan zum perlahan |
+  | 35–45 | Struktur master prompt |
+  | 45–52 | **RANCANG → LULUS → JANA SATU HALAMAN** |
+  | 52–60 | Kod QR dan arahan mendapatkan prompt |
+
+- Kawalan **Mula**, **Jeda**, **Ulang**, **Skrin Penuh**, **Sembunyikan Kawalan**, garis masa boleh dilompat dan
+  panduan **Zon Selamat** TikTok (semua teks penting berada dalam zon itu).
+- 12 ilustrasi asal dalam `public/halaman/` digunakan tanpa diubah; tiada teks ditambah di atas ilustrasi.
+- Halaman **MASTER PROMPT PENUH** (`prompt/` atau `#/master-prompt`): teks boleh dipilih, disalin, dimuat turun
+  (.txt) dan dibesarkan untuk telefon.
+- Master prompt asal dimasukkan dalam [`kandungan/master-prompt.txt`](kandungan/master-prompt.txt) di antara baris penanda.
+  Tiada teks draf digunakan; selagi kosong, aplikasi memaparkan **MASTER PROMPT BELUM DIMASUKKAN**.
+- Kod QR dijana dalam pelayar daripada URL awam perkongsian prompt (`URL_PERKONGSIAN_PROMPT` dalam
+  `src/data/tiktok.ts`, atau ditetapkan dalam aplikasi). Selagi tiada URL sah, showcase memaparkan placeholder
+  **BELUM DIKONFIGURASI** — tiada QR palsu dijana.
+- Teks struktur prompt, aliran kerja dan penutup boleh disunting dalam `src/data/tiktok.ts`.
 
 ## Ciri-ciri
 
@@ -38,7 +67,7 @@ karya **Nuraidah binti Mustapah**.
 
 ## Teknologi
 
-React 19 · TypeScript · Vite · Tailwind CSS 4 · Motion · fflate · Vitest
+React 19 · TypeScript · Vite · Tailwind CSS 4 · Motion · fflate · uqr (kod QR) · Vitest
 
 ## Cara menjalankan
 
@@ -59,6 +88,18 @@ npm run binaan:pratonton  # satu fail HTML lengkap ke pratonton/index.html (dibu
 npm run preview    # pratonton hasil binaan di http://localhost:4173
 ```
 
+## Pintasan papan kekunci (TikTok Cinematic Showcase)
+
+| Kekunci | Fungsi |
+| --- | --- |
+| Ruang / K | Mula atau Jeda |
+| ← / → | Undur / maju 5 saat |
+| R | Ulang dari awal |
+| H | Sembunyi / papar kawalan |
+| Z | Papar panduan zon selamat |
+| F | Skrin penuh |
+| Esc | Tutup |
+
 ## Pintasan papan kekunci (mod persembahan)
 
 | Kekunci | Fungsi |
@@ -73,13 +114,22 @@ npm run preview    # pratonton hasil binaan di http://localhost:4173
 ## Struktur projek
 
 ```
+kandungan/master-prompt.txt ← TAMPAL MASTER PROMPT ASAL DI SINI
+prompt/index.html        ← halaman MASTER PROMPT PENUH (untuk kod QR)
+.github/workflows/pages.yml ← terbit ke GitHub Pages (dijalankan manual)
+docs/PANDUAN-GITHUB-PAGES.md ← panduan menerbitkan laman perkongsian prompt
 public/halaman/          ← letak 12 imej sebenar di sini (simpanan kekal)
 pratonton/index.html     ← pratonton satu fail, dibuka tanpa Node.js
 docs/PANDUAN-IMEJ.md     ← panduan memasukkan imej dan batasan storan
 docs/PANDUAN-PENGGUNA.md ← panduan ringkas pengguna
 src/
 ├── data/buku.ts         ← maklumat buku dan 12 halaman
-├── data/masterPrompt.ts ← master prompt (kini templat draf)
+├── data/masterPrompt.ts ← membaca kandungan/master-prompt.txt
+├── data/tiktok.ts       ← tetapan TikTok Showcase: URL QR, zon selamat, teks segmen
+├── lib/garisMasa.ts     ← garis masa 60 saat (diuji)
+├── lib/qr.ts            ← penjana kod QR (diuji)
+├── lib/urlAwam.ts       ← pengesahan URL awam (diuji)
+├── components/tiktok/   ← TikTok Cinematic Showcase, kod QR, tetapan QR
 ├── data/slaid.ts        ← urutan dan tempoh slaid persembahan
 ├── lib/autoplay.ts      ← logik persembahan automatik (diuji)
 ├── lib/selak.ts         ← logik susunan muka animasi selak (diuji)

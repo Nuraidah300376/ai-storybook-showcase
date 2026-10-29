@@ -21,6 +21,8 @@ export type TindakanAutoplay =
   | { jenis: 'seterusnya' }
   | { jenis: 'sebelumnya' }
   | { jenis: 'pergi'; indeks: number }
+  /** Lompat ke kedudukan tepat (slaid dan masa berlalu), contohnya dari peluncur garis masa. */
+  | { jenis: 'loncat'; indeks: number; berlalu: number }
 
 export interface ConfigAutoplay {
   jumlah: number
@@ -80,6 +82,11 @@ export function pengurangAutoplay(
 
     case 'pergi':
       return { ...keadaan, indeks: hadkan(tindakan.indeks, 0, akhir), berlalu: 0, tamat: false }
+
+    case 'loncat': {
+      const indeks = hadkan(tindakan.indeks, 0, akhir)
+      return { ...keadaan, indeks, berlalu: hadkan(tindakan.berlalu, 0, config.tempoh(indeks)), tamat: false }
+    }
   }
 }
 

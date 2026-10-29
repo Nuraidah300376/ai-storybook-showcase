@@ -1,25 +1,21 @@
 /**
- * Master prompt yang dikongsi dalam bahagian "Kongsi Master Prompt".
+ * Master prompt yang dikongsi dalam aplikasi dan di halaman MASTER PROMPT PENUH.
  *
- * NOTA: Ini ialah templat draf. Gantikan kandungan `MASTER_PROMPT` dengan
- * master prompt sebenar yang digunakan untuk menghasilkan buku ini.
+ * Kandungan dibaca daripada `kandungan/master-prompt.txt` (fail teks biasa,
+ * jadi simbol seperti ` dan ${ tidak perlu di-escape). Tampal master prompt
+ * asal yang lengkap di antara baris penanda dalam fail itu.
+ *
+ * Selagi ruang itu kosong, `PROMPT_TERSEDIA` bernilai false dan antara muka
+ * memaparkan status "MASTER PROMPT BELUM DIMASUKKAN" — tiada teks draf dipaparkan.
  */
+import mentah from '../../kandungan/master-prompt.txt?raw'
+import { ekstrakPrompt } from '../lib/prompt'
 
-export const STATUS_PROMPT: 'draf' | 'sebenar' = 'draf'
+export const TAJUK_PROMPT = 'MASTER PROMPT PREMIUM — BUKU CERITA BERGAMBAR BERHALAMAN'
 
-export const MASTER_PROMPT = `Anda ialah penulis dan pereka buku cerita kanak-kanak.
+export const MASTER_PROMPT = ekstrakPrompt(mentah)
 
-Hasilkan sebuah buku cerita bergambar bertajuk "Amanah Kecil, Hati Besar" dalam Bahasa Melayu standard.
+export const PROMPT_TERSEDIA = MASTER_PROMPT.length > 0
 
-Keperluan:
-1. Sasaran pembaca: kanak-kanak sekolah rendah.
-2. Tema utama: amanah, kejujuran dan tanggungjawab.
-3. Panjang: 12 halaman.
-4. Bagi setiap halaman, sediakan:
-   - teks cerita yang ringkas dan mudah difahami;
-   - huraian ilustrasi yang terperinci untuk penjanaan imej.
-5. Kekalkan rupa watak, pakaian dan latar yang konsisten pada setiap halaman.
-6. Gaya ilustrasi: 3D lembut, warna hangat, mesra kanak-kanak.
-7. Akhiri cerita dengan pengajaran yang jelas.
-
-[Gantikan templat ini dengan master prompt sebenar anda.]`
+/** Laluan fail untuk dipaparkan dalam arahan kepada pemilik. */
+export const LOKASI_FAIL_PROMPT = 'kandungan/master-prompt.txt'

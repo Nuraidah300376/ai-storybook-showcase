@@ -43,3 +43,10 @@ describe('pengurangAutoplay', () => {
     expect(run(keadaanAwal, { jenis: 'pergi', indeks: 99 }).indeks).toBe(2)
   })
 })
+
+describe('loncat', () => {
+  it('melompat ke slaid dan masa tepat, dihadkan kepada tempoh slaid', () => {
+    expect(run(keadaanAwal, { jenis: 'loncat', indeks: 1, berlalu: 400 })).toMatchObject({ indeks: 1, berlalu: 400, tamat: false })
+    expect(run(keadaanAwal, { jenis: 'loncat', indeks: 9, berlalu: 5000 })).toMatchObject({ indeks: 2, berlalu: 1000 })
+  })
+})

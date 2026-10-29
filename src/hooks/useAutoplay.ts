@@ -38,6 +38,7 @@ export function useAutoplay(config: ConfigAutoplay) {
       seterusnya: () => hantar({ jenis: 'seterusnya' }),
       sebelumnya: () => hantar({ jenis: 'sebelumnya' }),
       pergi: (indeks: number) => hantar({ jenis: 'pergi', indeks }),
+      loncat: (indeks: number, berlalu: number) => hantar({ jenis: 'loncat', indeks, berlalu }),
     }),
     [],
   )
