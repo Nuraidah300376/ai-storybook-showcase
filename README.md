@@ -73,7 +73,7 @@ npm run preview    # pratonton hasil binaan di http://localhost:4173
 ## Struktur projek
 
 ```
-public/halaman/          ← letak 12 imej sebenar di sini (simpanan kekal)
+public/halaman/          ← 12 imej sebenar: halaman-01.png … halaman-12.png (simpanan kekal)
 pratonton/index.html     ← pratonton satu fail, dibuka tanpa Node.js
 docs/PANDUAN-IMEJ.md     ← panduan memasukkan imej dan batasan storan
 docs/PANDUAN-PENGGUNA.md ← panduan ringkas pengguna

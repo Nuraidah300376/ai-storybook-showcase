@@ -151,7 +151,8 @@ async function failAsal(nombor: number): Promise<RekodPakej | null> {
   for (const url of calonImej(nombor)) {
     try {
       const res = await fetch(url)
-      if (!res.ok) continue
+      // Sesetengah pelayan memulangkan index.html (200) bagi fail yang tiada.
+      if (!res.ok || !res.headers.get('content-type')?.startsWith('image/')) continue
       const blob = await res.blob()
       const nama = url.split('/').pop()!
       const jenis = jenisDaripadaNama(nama)

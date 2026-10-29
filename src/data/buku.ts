@@ -2,7 +2,8 @@
  * Maklumat buku dan senarai 12 halaman.
  *
  * Setiap halaman ialah satu imej A5 potret penuh (ilustrasi dan teks cerita
- * sudah terkandung dalam imej). Imej TIDAK disertakan dalam repositori.
+ * sudah terkandung dalam imej). 12 imej asal disimpan dalam
+ * `public/halaman/halaman-01.png` hingga `halaman-12.png`.
  * Sumber imej mengikut keutamaan:
  *   1. imej yang dimuat naik melalui Pengurus Halaman Buku (storan pelayar);
  *   2. fail `public/halaman/halaman-XX.(webp|jpg|jpeg|png)`;
