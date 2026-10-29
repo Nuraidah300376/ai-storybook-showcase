@@ -1,11 +1,12 @@
 import { motion } from 'motion/react'
 import { BUKU } from '../data/buku'
-import { IkonBuku, IkonMain, IkonTelefon } from './Ikon'
+import { IkonBuku, IkonMain, IkonQr, IkonTelefon } from './Ikon'
 import { TajukAnimasi } from './TajukAnimasi'
 
 interface Props {
   onPersembahan: () => void
   onTikTok: () => void
+  onTikTok60: () => void
 }
 
 const muncul = (lewat: number) => ({
@@ -14,7 +15,7 @@ const muncul = (lewat: number) => ({
   transition: { delay: lewat, duration: 0.9, ease: [0.22, 1, 0.36, 1] as const },
 })
 
-export function Pembukaan({ onPersembahan, onTikTok }: Props) {
+export function Pembukaan({ onPersembahan, onTikTok, onTikTok60 }: Props) {
   return (
     <section
       id="utama"
@@ -62,6 +63,9 @@ export function Pembukaan({ onPersembahan, onTikTok }: Props) {
           </button>
           <button type="button" onClick={onTikTok} className="butang-hantu">
             <IkonTelefon /> Mod TikTok 9:16
+          </button>
+          <button type="button" onClick={onTikTok60} className="butang-zamrud">
+            <IkonQr /> TikTok 60 Saat: Master Prompt
           </button>
         </motion.div>
       </div>

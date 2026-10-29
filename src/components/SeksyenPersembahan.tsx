@@ -1,6 +1,7 @@
 import { motion } from 'motion/react'
 import { SLAID, TEMPOH_MS } from '../data/slaid'
-import { IkonMain, IkonMonitor, IkonTelefon } from './Ikon'
+import { JUMLAH_MS } from '../data/tiktok'
+import { IkonMain, IkonMonitor, IkonQr, IkonTelefon } from './Ikon'
 import { KepalaSeksyen } from './KepalaSeksyen'
 import type { Orientasi } from './Pentas'
 
@@ -8,7 +9,7 @@ const jumlahSaat = Math.round(
   (TEMPOH_MS.pembukaan + TEMPOH_MS.penutup + TEMPOH_MS.halaman * (SLAID.length - 2)) / 1000,
 )
 
-export function SeksyenPersembahan({ onBuka }: { onBuka: (o: Orientasi) => void }) {
+export function SeksyenPersembahan({ onBuka, onTikTok60 }: { onBuka: (o: Orientasi) => void; onTikTok60: () => void }) {
   const kad = [
     {
       o: 'menegak' as const,
@@ -65,12 +66,38 @@ export function SeksyenPersembahan({ onBuka }: { onBuka: (o: Orientasi) => void 
         ))}
       </div>
 
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.24, duration: 0.7 }}
+        className="relative mx-auto mt-5 max-w-4xl overflow-hidden rounded-3xl border border-emas-400/40 bg-gradient-to-br from-navy-800 via-navy-900 to-zamrud-700/40 p-6 sm:p-8"
+      >
+        <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
+          <div className="grid aspect-[9/16] w-20 shrink-0 place-items-center rounded-xl border-2 border-emas-400/70 bg-navy-950 text-emas-300">
+            <IkonQr width="2em" height="2em" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="label-seksyen">Fasa 3 · Baharu</p>
+            <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">TikTok {Math.round(JUMLAH_MS / 1000)} saat: Kongsi Master Prompt</h3>
+            <p className="mt-2 text-sm text-slate-400">
+              Hook, kulit hadapan, 12 halaman diselak 3D, kelebihan master prompt, proses RANCANG → LULUS → JANA SATU HALAMAN dan
+              kod QR ke prompt percuma. Format 9:16 (asas 1080×1920) dengan kapsyen dalam kawasan selamat.
+            </p>
+          </div>
+          <button type="button" className="butang-emas shrink-0" onClick={onTikTok60}>
+            <IkonMain /> Buka TikTok 60s
+          </button>
+        </div>
+      </motion.div>
+
       <div className="kaca mx-auto mt-6 max-w-4xl rounded-2xl p-5 text-sm text-slate-300">
         <p className="font-semibold text-emas-300">Petua rakaman TikTok</p>
         <ol className="mt-2 list-decimal space-y-1 pl-5 text-slate-400">
-          <li>Buka mod Menegak 9:16 dan tekan butang skrin penuh.</li>
+          <li>Buka mod Menegak 9:16 (atau TikTok 60 saat) dan tekan butang skrin penuh.</li>
           <li>Tekan butang mata (atau kekunci H) untuk menyembunyikan kawalan.</li>
           <li>Mulakan perakam skrin peranti anda, kemudian ketik skrin dan tekan Mula atau Ulang.</li>
+          <li>Dalam TikTok 60 saat, butang <strong>Rakam Bersih</strong> menyembunyikan kawalan dan bermula dari 0:00 selepas 2 saat.</li>
         </ol>
         <p className="mt-3 text-xs text-slate-500">
           Aplikasi ini tidak mengeksport video. Gunakan fungsi rakaman skrin sedia ada pada telefon atau komputer.

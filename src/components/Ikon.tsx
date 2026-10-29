@@ -153,3 +153,17 @@ export const IkonPakej = (p: P) => (
     <path d="m3 8 9 5 9-5M12 13v8" />
   </Asas>
 )
+export const IkonQr = (p: P) => (
+  <Asas {...p}>
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3" />
+  </Asas>
+)
+export const IkonGrid = (p: P) => (
+  <Asas {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2" strokeDasharray="3 2.5" />
+    <rect x="7" y="6" width="10" height="11" rx="1" />
+  </Asas>
+)

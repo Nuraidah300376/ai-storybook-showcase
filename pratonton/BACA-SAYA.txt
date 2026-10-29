@@ -5,6 +5,8 @@ PRATONTON AI STORYBOOK SHOWCASE — TANPA NODE.JS
    Tiada pemasangan atau sambungan internet diperlukan.
 3. Muat naik 12 imej melalui bahagian PENGURUS HALAMAN BUKU.
 
+Persembahan TikTok 60 saat: tekan butang "TikTok 60 Saat: Master Prompt".
+
 Imej yang dimuat naik disimpan dalam storan pelayar pada komputer itu sahaja.
 
 Pilihan: letakkan folder halaman/ (berisi halaman-01.png ... halaman-12.png)

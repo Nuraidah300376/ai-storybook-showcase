@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { MASTER_PROMPT, STATUS_PROMPT } from '../data/masterPrompt'
+import { MASTER_PROMPT, URL_PROMPT } from '../data/masterPrompt'
 import { useSalin } from '../hooks/useSalin'
 import { IkonSalin, IkonTanda } from './Ikon'
 import { KepalaSeksyen } from './KepalaSeksyen'
@@ -37,12 +37,18 @@ export function SeksyenPrompt() {
                 <span className="size-3 rounded-full bg-zamrud-400/80" />
                 <span className="size-3 rounded-full bg-white/30" />
               </span>
-              <span className="text-sm font-semibold text-slate-300">master-prompt.txt</span>
-              {STATUS_PROMPT === 'draf' && (
-                <span className="rounded-full border border-emas-400/40 bg-emas-400/10 px-2 py-0.5 text-[0.7rem] text-emas-300">
-                  Templat draf
-                </span>
-              )}
+              <span className="text-sm font-semibold text-slate-300">MASTER-PROMPT-BUKU-CERITA.md</span>
+              <span className="rounded-full border border-zamrud-400/40 bg-zamrud-400/10 px-2 py-0.5 text-[0.7rem] text-zamrud-300">
+                Versi asal
+              </span>
+              <a
+                href={URL_PROMPT}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[0.75rem] text-slate-400 underline decoration-white/20 underline-offset-4 hover:text-emas-200"
+              >
+                Lihat di GitHub
+              </a>
             </div>
             <button
               type="button"

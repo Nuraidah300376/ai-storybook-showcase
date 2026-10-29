@@ -5,7 +5,7 @@ karya **Nuraidah binti Mustapah**.
 
 > **Pembangun:** Nuraidah binti Mustapah
 
-**Status: Fasa 2** — Pengurus Halaman Buku: muat naik, ganti, pratonton, eksport dan import 12 imej halaman A5 terus dalam aplikasi.
+**Status: Fasa 3** — Persembahan TikTok 60 saat untuk berkongsi **Master Prompt Premium — Buku Cerita Bergambar Berhalaman**.
 
 > **Pratonton tanpa Node.js:** muat turun [`pratonton/index.html`](pratonton/index.html) dan klik dua kali.
 > Panduan ringkas: [`docs/PANDUAN-PENGGUNA.md`](docs/PANDUAN-PENGGUNA.md).
@@ -13,6 +13,18 @@ karya **Nuraidah binti Mustapah**.
 ## Ciri-ciri
 
 - Halaman pembukaan dengan animasi tajuk **SATU PROMPT, SEBUAH BUKU CERITA!**
+- **Persembahan TikTok 60 saat** (Fasa 3) — butang *TikTok 60 Saat: Master Prompt* atau pautan terus `#tiktok-60`:
+  - format menegak 9:16 pada asas 1080×1920, diskala supaya muat di komputer dan telefon;
+  - susunan: hook *SATU PROMPT, SEBUAH BUKU CERITA!* (0–5 s) → kulit hadapan (5–12 s) → 12 halaman dengan
+    animasi selak 3D sebenar (12–35 s) → 4 kelebihan master prompt (35–45 s) → RANCANG → LULUS → JANA SATU HALAMAN
+    (45–52 s) → kod QR dan kredit (52–60 s);
+  - kapsyen ringkas setiap adegan, semua teks dalam kawasan selamat TikTok (butang **G** memaparkan panduan kawasan selamat);
+  - kod QR **sebenar** dijana daripada pautan GitHub master prompt (diuji boleh diimbas), dan boleh diganti dengan imej
+    PNG/JPG sendiri melalui butang QR — imej disemak dengan pembaca QR sebelum digunakan;
+  - kawalan Mula, Jeda, Ulang, lompat bahagian, Skrin Penuh, sembunyi kawalan dan **Rakam Bersih**
+    (kawalan disembunyikan, persembahan bermula dari 0:00 selepas 2 saat);
+  - kelebihan dan langkah dipetik daripada master prompt asal `prompts/MASTER-PROMPT-BUKU-CERITA.md`.
+- Bahagian **Kongsi Master Prompt** kini memaparkan dan menyalin master prompt asal daripada repositori (bukan lagi templat draf).
 - **Pengurus Halaman Buku** (Fasa 2):
   - 12 slot berlabel Halaman 01 hingga Halaman 12 dengan butang **Muat Naik / Ganti Gambar**, **Pratonton** dan buang;
   - muat naik berbilang fail (PNG, JPG, JPEG, WebP), seret dan lepas, disusun automatik mengikut nombor nama fail;
@@ -38,7 +50,7 @@ karya **Nuraidah binti Mustapah**.
 
 ## Teknologi
 
-React 19 · TypeScript · Vite · Tailwind CSS 4 · Motion · fflate · Vitest
+React 19 · TypeScript · Vite · Tailwind CSS 4 · Motion · fflate · qrcode · jsQR · Vitest
 
 ## Cara menjalankan
 
@@ -68,7 +80,10 @@ npm run preview    # pratonton hasil binaan di http://localhost:4173
 | R | Ulang dari awal |
 | H | Sembunyi / papar kawalan |
 | F | Skrin penuh |
+| G | Panduan kawasan selamat (TikTok 60 saat) |
 | Esc | Tutup |
+
+Dalam TikTok 60 saat, ← / → melompat antara bahagian (hook, kulit, halaman, kelebihan, proses, kod QR).
 
 ## Struktur projek
 
@@ -79,7 +94,9 @@ docs/PANDUAN-IMEJ.md     ← panduan memasukkan imej dan batasan storan
 docs/PANDUAN-PENGGUNA.md ← panduan ringkas pengguna
 src/
 ├── data/buku.ts         ← maklumat buku dan 12 halaman
-├── data/masterPrompt.ts ← master prompt (kini templat draf)
+├── data/masterPrompt.ts ← master prompt asal (dibaca daripada prompts/)
+├── data/tiktok.ts       ← garis masa TikTok 60 saat (diuji)
+├── lib/kodQr.ts         ← penjanaan kod QR sebenar (diuji dengan pembaca QR)
 ├── data/slaid.ts        ← urutan dan tempoh slaid persembahan
 ├── lib/autoplay.ts      ← logik persembahan automatik (diuji)
 ├── lib/selak.ts         ← logik susunan muka animasi selak (diuji)
@@ -87,6 +104,7 @@ src/
 ├── lib/pakej.ts         ← eksport/import pakej ZIP (diuji)
 ├── lib/storImej.ts      ← storan imej IndexedDB / sesi
 ├── components/pengurus/ ← Pengurus Halaman Buku
+├── components/tiktok/   ← persembahan TikTok 60 saat
 ├── components/buku/     ← buku selak 3D dan muka halaman
 └── components/          ← komponen antara muka
 ```

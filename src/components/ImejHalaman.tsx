@@ -1,6 +1,6 @@
 import { useState, useSyncExternalStore } from 'react'
 import { HALAMAN, calonImej, namaFailImej, type Halaman } from '../data/buku'
-import { useImejDimuatNaik } from '../lib/storImej'
+import { useImejDimuatNaik, useStorImej } from '../lib/storImej'
 import { IkonImej } from './Ikon'
 
 /**
@@ -32,6 +32,21 @@ export function useImejAsal(nombor: number): string | null | undefined {
     () => cache.get(nombor),
     () => cache.get(nombor),
   )
+}
+
+/** Bilangan halaman yang imejnya sudah berjaya dimuat (dimuat naik atau fail public/halaman/). */
+export function useBilanganImejSedia(): number {
+  const { imej } = useStorImej()
+  const asal = useSyncExternalStore(langgan, senaraiAsalSedia, senaraiAsalSedia)
+  const sedia = new Set(asal ? asal.split(',').map(Number) : [])
+  return HALAMAN.filter((h) => imej[h.nombor] || sedia.has(h.nombor)).length
+}
+
+/** Rentetan stabil (untuk useSyncExternalStore) bagi nombor halaman dengan fail asal yang dimuat. */
+function senaraiAsalSedia(): string {
+  return HALAMAN.filter((h) => cache.get(h.nombor))
+    .map((h) => h.nombor)
+    .join(',')
 }
 
 /**
