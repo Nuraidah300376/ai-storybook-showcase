@@ -1,4 +1,4 @@
-# Panduan Ringkas Pengguna — Fasa 2
+# Panduan Ringkas Pengguna — Fasa 3
 
 ## Membuka aplikasi tanpa Node.js
 
@@ -34,3 +34,17 @@
 | Sembunyi kawalan | Butang mata atau kekunci H |
 
 Aplikasi tidak mengeksport video. Gunakan perakam skrin telefon atau komputer semasa persembahan dimainkan.
+
+## Persembahan TikTok 60 saat (Fasa 3)
+
+1. Tekan **TikTok 60 Saat: Master Prompt** (halaman utama atau bahagian Persembahan).
+   Pautan terus: tambah `#tiktok-60` pada alamat aplikasi.
+2. Semak lencana **12/12 imej** pada bar kawalan — semua halaman sudah dimuat.
+3. Pilihan: tekan butang **QR** untuk menggantikan kod QR dengan imej PNG/JPG sendiri. Imej yang tiada kod QR
+   yang boleh dibaca akan ditolak. Tekan *Guna kod dijana* untuk kembali kepada kod QR automatik.
+4. Pilihan: tekan butang **kawasan selamat** (atau G) untuk melihat kawasan yang dilindungi antara muka TikTok.
+5. Tekan **Skrin Penuh**, mulakan perakam skrin, kemudian tekan **Rakam Bersih**: kawalan disembunyikan dan
+   persembahan bermula dari 0:00 selepas 2 saat. Potong 2 saat pertama semasa menyunting.
+6. Ketik skrin atau tekan H untuk memaparkan semula kawalan.
+
+Nota: skrin penuh tidak disokong oleh Safari pada iPhone; gunakan perakam skrin terus dalam paparan biasa.

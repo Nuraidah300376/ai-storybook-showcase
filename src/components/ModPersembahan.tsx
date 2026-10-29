@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { SLAID, tempohSlaid } from '../data/slaid'
 import { useAutoplay } from '../hooks/useAutoplay'
+import { useSaizPentas } from '../hooks/useSaizPentas'
 import {
   IkonJeda,
   IkonKanan,
@@ -22,28 +23,6 @@ interface Props {
 }
 
 const NISBAH: Record<Orientasi, number> = { menegak: 9 / 16, landskap: 16 / 9 }
-
-/** Kira saiz pentas terbesar yang muat dalam bekas mengikut nisbah. */
-function useSaizPentas(nisbah: number) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [saiz, setSaiz] = useState({ w: 0, h: 0 })
-
-  useLayoutEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const kira = () => {
-      const { width, height } = el.getBoundingClientRect()
-      const w = Math.min(width, height * nisbah)
-      setSaiz({ w: Math.floor(w), h: Math.floor(w / nisbah) })
-    }
-    kira()
-    const ro = new ResizeObserver(kira)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [nisbah])
-
-  return { ref, saiz }
-}
 
 export function ModPersembahan({ orientasiAwal, onTutup }: Props) {
   const [orientasi, setOrientasi] = useState<Orientasi>(orientasiAwal)
