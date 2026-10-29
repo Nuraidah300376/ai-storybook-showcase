@@ -1,7 +1,7 @@
 {
   "name": "ai-storybook-showcase",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "AI Storybook Showcase — persembahan buku cerita bergambar Amanah Kecil, Hati Besar karya Nuraidah binti Mustapah.",
   "type": "module",
   "scripts": {
@@ -18,7 +18,8 @@
     "fflate": "^0.8.3",
     "motion": "^12.0.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "uqr": "^0.1.3"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",

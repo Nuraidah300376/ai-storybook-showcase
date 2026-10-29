@@ -86,3 +86,36 @@
     scroll-behavior: auto;
   }
 }
+
+/* Peluncur garis masa TikTok Cinematic Showcase. */
+.garis-masa {
+  appearance: none;
+  background: transparent;
+}
+.garis-masa::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-emas-400) var(--isi, 0%), rgba(255, 255, 255, 0.15) var(--isi, 0%));
+}
+.garis-masa::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-emas-400) var(--isi, 0%), rgba(255, 255, 255, 0.15) var(--isi, 0%));
+}
+.garis-masa::-webkit-slider-thumb {
+  appearance: none;
+  margin-top: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-emas-200);
+  box-shadow: 0 0 0 3px rgba(5, 10, 24, 0.9);
+}
+.garis-masa::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-emas-200);
+  box-shadow: 0 0 0 3px rgba(5, 10, 24, 0.9);
+}

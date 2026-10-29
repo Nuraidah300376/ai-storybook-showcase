@@ -146,5 +146,5 @@ pratonton/
 ## (Pilihan) Teks alternatif dan master prompt
 
 - **Teks alternatif imej:** kemas kini medan `alt` dalam `src/data/buku.ts` supaya pembaca skrin dapat menerangkan setiap halaman.
-- **Master prompt:** gantikan kandungan `MASTER_PROMPT` dalam `src/data/masterPrompt.ts`, dan tukar
-  `STATUS_PROMPT` kepada `'sebenar'` untuk membuang label “Templat draf”.
+- **Master prompt:** tampal master prompt asal di antara baris penanda dalam `kandungan/master-prompt.txt`.
+  Lihat [PANDUAN-GITHUB-PAGES.md](PANDUAN-GITHUB-PAGES.md).

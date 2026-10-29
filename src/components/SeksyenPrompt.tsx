@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { MASTER_PROMPT, STATUS_PROMPT } from '../data/masterPrompt'
+import { LOKASI_FAIL_PROMPT, MASTER_PROMPT, PROMPT_TERSEDIA } from '../data/masterPrompt'
+import { LALUAN } from '../hooks/useHash'
 import { useSalin } from '../hooks/useSalin'
-import { IkonSalin, IkonTanda } from './Ikon'
+import { IkonAmaran, IkonSalin, IkonTanda } from './Ikon'
 import { KepalaSeksyen } from './KepalaSeksyen'
 
 export function SeksyenPrompt() {
@@ -38,14 +39,15 @@ export function SeksyenPrompt() {
                 <span className="size-3 rounded-full bg-white/30" />
               </span>
               <span className="text-sm font-semibold text-slate-300">master-prompt.txt</span>
-              {STATUS_PROMPT === 'draf' && (
+              {!PROMPT_TERSEDIA && (
                 <span className="rounded-full border border-emas-400/40 bg-emas-400/10 px-2 py-0.5 text-[0.7rem] text-emas-300">
-                  Templat draf
+                  Belum dimasukkan
                 </span>
               )}
             </div>
             <button
               type="button"
+              disabled={!PROMPT_TERSEDIA}
               onClick={() => salin(MASTER_PROMPT)}
               className={status === 'berjaya' ? 'butang-zamrud' : 'butang-emas'}
             >
@@ -63,9 +65,27 @@ export function SeksyenPrompt() {
               </AnimatePresence>
             </button>
           </div>
-          <pre className="max-h-[28rem] overflow-auto p-5 text-sm leading-relaxed whitespace-pre-wrap text-slate-200 sm:p-7 sm:text-[0.95rem]">
-            {MASTER_PROMPT}
-          </pre>
+          {PROMPT_TERSEDIA ? (
+            <pre className="max-h-[28rem] overflow-auto p-5 text-sm leading-relaxed break-words whitespace-pre-wrap text-slate-200 select-text sm:p-7 sm:text-[0.95rem]">
+              {MASTER_PROMPT}
+            </pre>
+          ) : (
+            <div role="status" className="flex flex-col items-center gap-3 p-8 text-center sm:p-12">
+              <span className="text-2xl text-emas-300">
+                <IkonAmaran />
+              </span>
+              <p className="font-semibold tracking-wide text-emas-200">MASTER PROMPT BELUM DIMASUKKAN</p>
+              <p className="max-w-lg text-sm text-slate-400">
+                Tampal master prompt asal yang lengkap di antara baris penanda dalam fail{' '}
+                <code className="text-slate-200">{LOKASI_FAIL_PROMPT}</code>. Tiada teks draf dipaparkan sebagai kandungan akhir.
+              </p>
+            </div>
+          )}
+          <div className="border-t border-white/10 px-5 py-3 text-right">
+            <a href={LALUAN.masterPrompt} className="text-sm font-semibold text-emas-300 hover:text-emas-200">
+              Buka halaman Master Prompt Penuh →
+            </a>
+          </div>
           <p className="sr-only" aria-live="polite">
             {status === 'berjaya' ? 'Prompt telah disalin ke papan keratan.' : status === 'gagal' ? 'Prompt gagal disalin.' : ''}
           </p>

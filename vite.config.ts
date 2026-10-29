@@ -8,13 +8,23 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 //
 // Mod `pratonton` (npm run binaan:pratonton) menghasilkan satu fail HTML
 // lengkap dalam folder pratonton/ yang boleh dibuka terus tanpa Node.js.
+//
+// Binaan biasa menghasilkan dua halaman: index.html (aplikasi penuh) dan
+// prompt/index.html (halaman MASTER PROMPT PENUH yang ringan untuk kod QR).
 export default defineConfig(({ mode }) => ({
   base: './',
   plugins: [react(), tailwindcss(), ...(mode === 'pratonton' ? [viteSingleFile()] : [])],
   build:
     mode === 'pratonton'
       ? { outDir: 'pratonton', emptyOutDir: false, copyPublicDir: false }
-      : undefined,
+      : {
+          rollupOptions: {
+            input: {
+              main: 'index.html',
+              prompt: 'prompt/index.html',
+            },
+          },
+        },
   test: {
     environment: 'node',
   },

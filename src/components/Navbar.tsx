@@ -4,6 +4,7 @@ import { IkonBuku, IkonTelefon } from './Ikon'
 const PAUTAN = [
   { href: '#buku', label: 'Buku' },
   { href: '#pengurus', label: 'Pengurus Halaman' },
+  { href: '#tiktok', label: 'TikTok Showcase' },
   { href: '#persembahan', label: 'Persembahan' },
   { href: '#prompt', label: 'Master Prompt' },
   { href: '#panduan', label: 'Panduan' },

@@ -1,4 +1,4 @@
-# Panduan Ringkas Pengguna — Fasa 2
+# Panduan Ringkas Pengguna — Fasa 3
 
 ## Membuka aplikasi tanpa Node.js
 
@@ -27,10 +27,22 @@
 | --- | --- |
 | Baca buku | Butang Sebelumnya/Seterusnya, kekunci ← →, ketik tepi halaman atau leret |
 | Persembahan 16:9 | Butang **Mod Persembahan** (dua halaman A5 bersebelahan) |
-| TikTok 9:16 | Butang **Mod TikTok 9:16** (satu halaman A5) |
+| TikTok Cinematic Showcase | Butang **Mod TikTok 9:16** — persembahan 60 saat, 1080×1920 |
+| Persembahan menegak lama | Bahagian **Mod Persembahan Automatik** → *Menegak 9:16* |
+| Lompat masa (showcase) | Seret garis masa, atau kekunci ← → (5 saat) |
+| Zon selamat TikTok | Butang **Zon Selamat** atau kekunci Z |
 | Mula / Jeda | Butang Mula/Jeda atau kekunci Ruang |
 | Ulang | Butang Ulang atau kekunci R |
 | Skrin penuh | Butang skrin penuh atau kekunci F |
 | Sembunyi kawalan | Butang mata atau kekunci H |
 
 Aplikasi tidak mengeksport video. Gunakan perakam skrin telefon atau komputer semasa persembahan dimainkan.
+
+## Master prompt dan kod QR (Fasa 3)
+
+1. Tampal master prompt asal di antara penanda dalam `kandungan/master-prompt.txt`.
+2. Terbitkan ke GitHub Pages dan uji pautan `…/prompt/` pada telefon lain.
+3. Tetapkan URL itu (dalam `src/data/tiktok.ts` atau panel **Kod QR perkongsian master prompt**) — kod QR sebenar dijana.
+
+Langkah penuh: [PANDUAN-GITHUB-PAGES.md](PANDUAN-GITHUB-PAGES.md). Selagi URL belum ditetapkan, showcase
+memaparkan placeholder **BELUM DIKONFIGURASI**.
