@@ -4,7 +4,8 @@ Setiap halaman buku *Amanah Kecil, Hati Besar* ialah **satu imej A5 potret penuh
 warna dan teks cerita sudah terkandung dalam imej. Aplikasi memaparkan imej itu sepenuhnya, tanpa dipotong,
 dan **tidak** menambah teks cerita di atasnya.
 
-Tiada imej buku disertakan dalam repositori. Selagi imej belum dimasukkan, setiap halaman memaparkan placeholder berlabel.
+12 ilustrasi asal buku disimpan dalam `public/halaman/` sebagai `halaman-01.png` hingga `halaman-12.png` dan dikesan
+secara automatik. Jika sesuatu fail tiada, halaman itu memaparkan placeholder berlabel.
 
 ## Spesifikasi imej
 

@@ -2,10 +2,10 @@
  * Maklumat buku dan senarai 12 halaman.
  *
  * Setiap halaman ialah satu imej A5 potret penuh (ilustrasi dan teks cerita
- * sudah terkandung dalam imej). Imej TIDAK disertakan dalam repositori.
+ * sudah terkandung dalam imej). 12 ilustrasi asal disimpan dalam `public/halaman/`.
  * Sumber imej mengikut keutamaan:
  *   1. imej yang dimuat naik melalui Pengurus Halaman Buku (storan pelayar);
- *   2. fail `public/halaman/halaman-XX.(webp|jpg|jpeg|png)`;
+ *   2. fail `public/halaman/halaman-XX.(png|webp|jpg|jpeg)`;
  *   3. placeholder berlabel.
  * Lihat docs/PANDUAN-IMEJ.md.
  */
@@ -19,8 +19,8 @@ export const BUKU = {
 
 export const JUMLAH_HALAMAN = 12
 
-/** Sambungan fail yang dicuba mengikut urutan. */
-export const SAMBUNGAN_IMEJ = ['webp', 'jpg', 'jpeg', 'png'] as const
+/** Sambungan fail yang dicuba mengikut urutan (PNG dahulu: format ilustrasi asal). */
+export const SAMBUNGAN_IMEJ = ['png', 'webp', 'jpg', 'jpeg'] as const
 
 export interface Halaman {
   /** Nombor halaman bermula dari 1. */
