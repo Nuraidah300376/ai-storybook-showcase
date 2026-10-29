@@ -14,10 +14,10 @@ describe('data buku', () => {
 
   it('menjana calon URL imej mengikut urutan sambungan', () => {
     expect(calonImej(3, './')).toEqual([
+      './halaman/halaman-03.png',
       './halaman/halaman-03.webp',
       './halaman/halaman-03.jpg',
       './halaman/halaman-03.jpeg',
-      './halaman/halaman-03.png',
     ])
   })
 })
