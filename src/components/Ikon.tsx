@@ -167,3 +167,9 @@ export const IkonGrid = (p: P) => (
     <rect x="7" y="6" width="10" height="11" rx="1" />
   </Asas>
 )
+export const IkonVideo = (p: P) => (
+  <Asas {...p}>
+    <rect x="2.5" y="5.5" width="13" height="13" rx="2" />
+    <path d="M15.5 10l6-3.5v11l-6-3.5z" />
+  </Asas>
+)

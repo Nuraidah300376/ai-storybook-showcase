@@ -19,8 +19,10 @@ import {
   IkonTanda,
   IkonTutup,
   IkonUlang,
+  IkonVideo,
 } from '../Ikon'
 import { useBilanganImejSedia } from '../ImejHalaman'
+import { PanelEksport } from './PanelEksport'
 import { LEBAR_PENTAS, PentasTikTok, TINGGI_PENTAS } from './PentasTikTok'
 
 /** Kelewatan sebelum "Rakam Bersih" bermula: masa untuk memulakan perakam skrin tanpa kawalan kelihatan. */
@@ -33,7 +35,8 @@ const mmss = (ms: number) => {
 
 /**
  * Mod persembahan TikTok 60 saat (Fasa 3): berkongsi master prompt buku cerita.
- * Pentas 1080×1920 diskala supaya muat pada skrin, sesuai untuk perakam skrin.
+ * Pentas 1080×1920 diskala supaya muat pada skrin. Fasa 4: butang Eksport MP4
+ * menghasilkan video siap (lihat PanelEksport).
  */
 export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
   const ap = useAutoplay({ jumlah: ADEGAN.length, tempoh: tempohAdegan })
@@ -42,6 +45,7 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
   const [petunjuk, setPetunjuk] = useState(false)
   const [panduan, setPanduan] = useState(false)
   const [panelQr, setPanelQr] = useState(false)
+  const [panelEksport, setPanelEksport] = useState(false)
   const [menunggu, setMenunggu] = useState(false)
   const akarRef = useRef<HTMLDivElement>(null)
   const tundaRef = useRef<number | undefined>(undefined)
@@ -115,6 +119,7 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
   const sembunyi = useCallback(() => {
     setKawalanTersembunyi(true)
     setPanelQr(false)
+    setPanelEksport(false)
     setPetunjuk(true)
   }, [])
 
@@ -124,6 +129,7 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
     jeda()
     setDimulakan(false)
     setPanelQr(false)
+    setPanelEksport(false)
     setKawalanTersembunyi(true)
     setPetunjuk(false)
     setMenunggu(true)
@@ -169,13 +175,14 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
           break
         case 'Escape':
           if (panelQr) setPanelQr(false)
+          else if (panelEksport) setPanelEksport(false)
           else if (!document.fullscreenElement) onTutup()
           break
       }
     }
     window.addEventListener('keydown', onKekunci)
     return () => window.removeEventListener('keydown', onKekunci)
-  }, [togol, ulang, lompat, togolSkrinPenuh, onTutup, panelQr])
+  }, [togol, ulang, lompat, togolSkrinPenuh, onTutup, panelQr, panelEksport])
 
   const skala = saiz.w / LEBAR_PENTAS
 
@@ -242,6 +249,7 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
       {!kawalanTersembunyi && (
         <div className="relative border-t border-white/10 bg-navy-950/95 px-3 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5">
           {panelQr && <PanelKodQr onTutup={() => setPanelQr(false)} />}
+          {panelEksport && <PanelEksport onTutup={() => setPanelEksport(false)} />}
 
           {/* Garis masa: klik untuk lompat ke bahagian */}
           <div className="mx-auto mb-2.5 flex max-w-3xl gap-1" role="group" aria-label="Bahagian persembahan">
@@ -319,8 +327,24 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
               </button>
               <button
                 type="button"
+                className={`butang-hantu px-3 sm:px-5 ${panelEksport ? 'border-emas-400/60 text-emas-200' : ''}`}
+                onClick={() => {
+                  setPanelQr(false)
+                  setPanelEksport((s) => !s)
+                }}
+                aria-expanded={panelEksport}
+                aria-label="Eksport Video MP4"
+                title="Eksport video MP4 1080×1920, 30 fps, 60 saat"
+              >
+                <IkonVideo /> Eksport<span className="hidden sm:inline"> MP4</span>
+              </button>
+              <button
+                type="button"
                 className={`butang-hantu px-3 ${panelQr ? 'border-emas-400/60 text-emas-200' : ''}`}
-                onClick={() => setPanelQr((s) => !s)}
+                onClick={() => {
+                  setPanelEksport(false)
+                  setPanelQr((s) => !s)
+                }}
                 aria-expanded={panelQr}
                 aria-label="Tetapan kod QR"
                 title="Kod QR"
@@ -359,7 +383,7 @@ export function PersembahanTikTok({ onTutup }: { onTutup: () => void }) {
           </div>
           <p className="mt-2 hidden text-center text-[0.7rem] text-slate-500 md:block">
             Ruang = Mula/Jeda · ← → = Bahagian · R = Ulang · H = Sembunyi kawalan · G = Kawasan selamat · F = Skrin penuh · Esc = Tutup ·
-            Tiada eksport video: rakam dengan perakam skrin peranti.
+            Eksport MP4 = video 1080×1920 siap tanpa perakam skrin.
           </p>
         </div>
       )}

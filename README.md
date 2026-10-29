@@ -5,13 +5,25 @@ karya **Nuraidah binti Mustapah**.
 
 > **Pembangun:** Nuraidah binti Mustapah
 
-**Status: Fasa 3** — Persembahan TikTok 60 saat untuk berkongsi **Master Prompt Premium — Buku Cerita Bergambar Berhalaman**.
+**Status: Fasa 4** — Eksport persembahan TikTok 60 saat terus kepada **video MP4** (1080×1920, 9:16, 30 fps, 60 saat),
+tanpa perakam skrin. Panduan langkah demi langkah: [`docs/PANDUAN-EKSPORT-VIDEO.md`](docs/PANDUAN-EKSPORT-VIDEO.md).
 
 > **Pratonton tanpa Node.js:** muat turun [`pratonton/index.html`](pratonton/index.html) dan klik dua kali.
 > Panduan ringkas: [`docs/PANDUAN-PENGGUNA.md`](docs/PANDUAN-PENGGUNA.md).
 
 ## Ciri-ciri
 
+- **Eksport Video MP4** (Fasa 4) — butang **Eksport MP4** dalam mod TikTok 60 Saat:
+  - MP4 H.264 (yuv420p), 1080×1920, 9:16, 30 fps, tepat 60 saat (1800 bingkai), tanpa audio melainkan trek audio diberi;
+  - **pemaparan bingkai demi bingkai yang deterministik**: halaman `#render-tiktok` dilukis dalam Chromium tanpa kepala
+    dengan jam maya, kemudian dikod oleh FFmpeg — animasi selak 3D sebenar, bukan imej statik atau rakaman skrin;
+  - bersih: tiada bar pelayar, kawalan, kursor atau ruang hitam; kod QR sebenar kekal boleh diimbas;
+  - indikator kemajuan (bingkai, peratus, baki masa), status berjaya/gagal dan butang **Muat Turun MP4**;
+  - setiap fail **disemak automatik** (codec, resolusi, fps, durasi, bilangan bingkai, animasi, tepi hitam, imbasan QR)
+    sebelum ditawarkan;
+  - dua cara sebenar: **GitHub Actions** (*Actions → Eksport Video TikTok → Run workflow*, MP4 sebagai artifak) atau
+    **butang satu klik** di komputer sendiri (`npm run eksport:pelayan`). Pada laman statik/Claude Artifact, butang itu
+    menerangkan sekatan dan menunjukkan cara-cara ini — bukan butang palsu.
 - Halaman pembukaan dengan animasi tajuk **SATU PROMPT, SEBUAH BUKU CERITA!**
 - **Persembahan TikTok 60 saat** (Fasa 3) — butang *TikTok 60 Saat: Master Prompt* atau pautan terus `#tiktok-60`:
   - format menegak 9:16 pada asas 1080×1920, diskala supaya muat di komputer dan telefon;
@@ -45,12 +57,13 @@ karya **Nuraidah binti Mustapah**.
 - Responsif untuk komputer, tablet dan telefon pintar.
 - Berjalan sepenuhnya di pelayar — tiada API berbayar, tiada kunci API, fon disertakan secara setempat.
 
-> Aplikasi ini **tidak** mempunyai fungsi eksport video. Untuk menghasilkan video TikTok,
-> gunakan perakam skrin pada telefon atau komputer semasa mod persembahan 9:16 dimainkan.
+> Eksport MP4 memerlukan enjin pemaparan (Chromium tanpa kepala + FFmpeg). Ia berjalan melalui GitHub Actions atau
+> pelayan tempatan, bukan di dalam fail pratonton, GitHub Pages atau Claude Artifact. Lihat
+> [`docs/PANDUAN-EKSPORT-VIDEO.md`](docs/PANDUAN-EKSPORT-VIDEO.md).
 
 ## Teknologi
 
-React 19 · TypeScript · Vite · Tailwind CSS 4 · Motion · fflate · qrcode · jsQR · Vitest
+React 19 · TypeScript · Vite · Tailwind CSS 4 · Motion · fflate · qrcode · jsQR · Vitest · Playwright (Chromium) · FFmpeg
 
 ## Cara menjalankan
 
@@ -69,7 +82,12 @@ npm run ujian      # ujian unit
 npm run build      # binaan produksi ke folder dist/
 npm run binaan:pratonton  # satu fail HTML lengkap ke pratonton/index.html (dibuka tanpa Node.js)
 npm run preview    # pratonton hasil binaan di http://localhost:4173
+npm run eksport:pelayan   # buka TikTok 60 Saat dengan butang Eksport MP4 yang aktif
+npm run eksport:video     # hasilkan dan semak eksport/tiktok-60s.mp4 terus dari terminal
+npm run semak:video       # semak semula eksport/tiktok-60s.mp4
 ```
+
+Eksport MP4 tempatan juga memerlukan FFmpeg dan `npx playwright install chromium` (sekali sahaja).
 
 ## Pintasan papan kekunci (mod persembahan)
 
@@ -92,6 +110,12 @@ public/halaman/          ← letak 12 imej sebenar di sini (simpanan kekal)
 pratonton/index.html     ← pratonton satu fail, dibuka tanpa Node.js
 docs/PANDUAN-IMEJ.md     ← panduan memasukkan imej dan batasan storan
 docs/PANDUAN-PENGGUNA.md ← panduan ringkas pengguna
+docs/PANDUAN-EKSPORT-VIDEO.md ← panduan eksport MP4 (Fasa 4)
+scripts/eksport-video.mjs ← pemapar MP4: Chromium tanpa kepala + jam maya + FFmpeg
+scripts/jam-maya.mjs     ← jam maya untuk bingkai deterministik
+scripts/semak-video.mjs  ← semakan MP4 akhir (metadata, animasi, kod QR)
+scripts/pluginEksportVideo.ts ← API eksport untuk pelayan tempatan (butang Eksport MP4)
+.github/workflows/eksport-video-tiktok.yml ← eksport MP4 melalui GitHub Actions
 src/
 ├── data/buku.ts         ← maklumat buku dan 12 halaman
 ├── data/masterPrompt.ts ← master prompt asal (dibaca daripada prompts/)
@@ -104,7 +128,7 @@ src/
 ├── lib/pakej.ts         ← eksport/import pakej ZIP (diuji)
 ├── lib/storImej.ts      ← storan imej IndexedDB / sesi
 ├── components/pengurus/ ← Pengurus Halaman Buku
-├── components/tiktok/   ← persembahan TikTok 60 saat
+├── components/tiktok/   ← persembahan TikTok 60 saat, panel eksport dan halaman pemaparan
 ├── components/buku/     ← buku selak 3D dan muka halaman
 └── components/          ← komponen antara muka
 ```

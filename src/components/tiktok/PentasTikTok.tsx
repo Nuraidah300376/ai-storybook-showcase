@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useMemo, type ReactNode } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { BUKU, JUMLAH_HALAMAN } from '../../data/buku'
 import { MASTER_PROMPT, TAJUK_PROMPT, URL_PROMPT } from '../../data/masterPrompt'
 import { ADEGAN, KELEBIHAN, LANGKAH, MULA_MS, TEMPOH_SELAK_MS, indeksBahagian, type JenisAdegan } from '../../data/tiktok'
@@ -110,12 +110,16 @@ function Latar({ masa }: { masa: number }) {
   return (
     <div aria-hidden="true" className="absolute inset-0">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,#172a5c_0%,transparent_60%),radial-gradient(ellipse_at_50%_100%,#0d5f4833_0%,transparent_55%)]" />
-      <div
-        className="absolute h-[900px] w-[900px] rounded-full bg-emas-500/20 blur-[140px]"
+      <OrbKabur
+        saiz={900}
+        kabur={140}
+        warna="--color-emas-500"
         style={{ left: -300 + Math.sin(s * 0.25) * 120, top: -260 + Math.cos(s * 0.2) * 80 }}
       />
-      <div
-        className="absolute h-[1000px] w-[1000px] rounded-full bg-zamrud-500/20 blur-[150px]"
+      <OrbKabur
+        saiz={1000}
+        kabur={150}
+        warna="--color-zamrud-500"
         style={{ right: -380 + Math.cos(s * 0.22) * 120, bottom: -300 + Math.sin(s * 0.18) * 100 }}
       />
       {/* Sinar cahaya perlahan */}
@@ -138,6 +142,56 @@ function Latar({ masa }: { masa: number }) {
           }}
         />
       ))}
+    </div>
+  )
+}
+
+/**
+ * Orb cahaya kabur (warna 20%, kaburan Gaussian). Kaburan dilukis SEKALI pada
+ * kanvas, bukan sebagai penapis CSS yang dikira semula setiap bingkai apabila
+ * orb bergerak: rupa sama, tetapi jauh lebih ringan untuk dilukis — penting
+ * bagi eksport video bingkai demi bingkai. Pelayar tanpa `ctx.filter`
+ * menggunakan penapis CSS asal. `warna`: nama pemboleh ubah CSS, cth. `--color-emas-500`.
+ */
+function OrbKabur({ saiz, kabur, warna, style }: { saiz: number; kabur: number; warna: string; style: CSSProperties }) {
+  const kanvas = useRef<HTMLCanvasElement>(null)
+  const [kanvasOk, setKanvasOk] = useState(true)
+  const tepi = kabur * 3
+  const penuh = saiz + tepi * 2
+
+  useLayoutEffect(() => {
+    const ctx = kanvas.current?.getContext('2d')
+    if (!ctx || !('filter' in ctx)) {
+      setKanvasOk(false)
+      return
+    }
+    const nilai = getComputedStyle(kanvas.current!).getPropertyValue(warna).trim()
+    ctx.clearRect(0, 0, penuh, penuh)
+    ctx.filter = `blur(${kabur}px)`
+    ctx.globalAlpha = 0.2
+    ctx.fillStyle = nilai || '#888'
+    ctx.beginPath()
+    ctx.arc(penuh / 2, penuh / 2, saiz / 2, 0, Math.PI * 2)
+    ctx.fill()
+  }, [saiz, kabur, warna, penuh])
+
+  if (!kanvasOk) {
+    return (
+      <div
+        className="absolute rounded-full"
+        style={{ ...style, width: saiz, height: saiz, background: `var(${warna})`, opacity: 0.2, filter: `blur(${kabur}px)` }}
+      />
+    )
+  }
+  return (
+    <div className="absolute" style={{ ...style, width: saiz, height: saiz }}>
+      <canvas
+        ref={kanvas}
+        width={penuh}
+        height={penuh}
+        className="absolute max-w-none"
+        style={{ left: -tepi, top: -tepi, width: penuh, height: penuh }}
+      />
     </div>
   )
 }

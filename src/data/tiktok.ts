@@ -96,3 +96,23 @@ export const LANGKAH = [
   { tajuk: 'LULUS', huraian: 'Semak pelan, kemudian taip “LULUS”.', bukti: 'FASA 2 — SEMAKAN DAN KELULUSAN' },
   { tajuk: 'JANA SATU HALAMAN', huraian: 'Kulit hadapan dahulu, kemudian satu halaman bagi setiap “TERUSKAN”.', bukti: 'FASA 3 — PENJANAAN BERHALAMAN' },
 ] as const
+
+/** Indeks adegan yang aktif pada masa `masa` (ms) dalam garis masa. */
+export function indeksAdeganPadaMasa(masa: number): number {
+  for (let i = ADEGAN.length - 1; i > 0; i--) if (masa >= MULA_MS[i]) return i
+  return 0
+}
+
+/**
+ * Spesifikasi video MP4 yang dieksport (Fasa 4). Skrip pemapar membaca nilai
+ * ini daripada halaman pemaparan, jadi aplikasi kekal satu-satunya sumber.
+ */
+export const SPESIFIKASI_VIDEO = {
+  lebar: 1080,
+  tinggi: 1920,
+  fps: 30,
+  tempohMs: JUMLAH_MS,
+  codec: 'H.264 (libx264)',
+} as const
+
+export const JUMLAH_BINGKAI = Math.round((SPESIFIKASI_VIDEO.tempohMs / 1000) * SPESIFIKASI_VIDEO.fps)

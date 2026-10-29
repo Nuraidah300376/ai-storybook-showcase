@@ -24,7 +24,7 @@ export default function App() {
   // Kenal pasti imej halaman lebih awal (fail public/halaman dan imej dimuat naik)
   // supaya animasi selak tidak berkelip.
   useEffect(() => {
-    pramuatImej()
+    void pramuatImej()
     void mulakanStor()
   }, [])
 
