@@ -52,24 +52,37 @@ function senaraiAsalSedia(): string {
 /**
  * Kenal pasti imej semua halaman lebih awal, supaya muka halaman yang muncul
  * semasa animasi selak terus memaparkan imej tanpa kelipan placeholder.
+ * Selesai apabila setiap halaman sudah disemak (imej ditemui atau tiada).
  */
-export function pramuatImej() {
-  for (const h of HALAMAN) {
-    if (cache.has(h.nombor)) continue
-    const calon = calonImej(h.nombor)
-    const cuba = (i: number) => {
-      if (cache.has(h.nombor)) return
-      if (i >= calon.length) {
-        tetapkanCache(h.nombor, null)
-        return
-      }
-      const img = new Image()
-      img.onload = () => tetapkanCache(h.nombor, calon[i])
-      img.onerror = () => cuba(i + 1)
-      img.src = calon[i]
-    }
-    cuba(0)
-  }
+export function pramuatImej(): Promise<void> {
+  const semua = HALAMAN.map(
+    (h) =>
+      new Promise<void>((selesai) => {
+        if (cache.has(h.nombor)) return selesai()
+        const calon = calonImej(h.nombor)
+        const cuba = (i: number) => {
+          if (cache.has(h.nombor)) return selesai()
+          if (i >= calon.length) {
+            tetapkanCache(h.nombor, null)
+            return selesai()
+          }
+          const img = new Image()
+          img.onload = () => {
+            tetapkanCache(h.nombor, calon[i])
+            selesai()
+          }
+          img.onerror = () => cuba(i + 1)
+          img.src = calon[i]
+        }
+        cuba(0)
+      }),
+  )
+  return Promise.all(semua).then(() => {})
+}
+
+/** URL fail `public/halaman/` yang berjaya dimuat (selepas `pramuatImej`). */
+export function urlImejAsal(): string[] {
+  return HALAMAN.flatMap((h) => cache.get(h.nombor) ?? [])
 }
 
 interface Props {

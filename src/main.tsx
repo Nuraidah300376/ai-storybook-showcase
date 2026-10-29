@@ -8,9 +8,9 @@ import '@fontsource/plus-jakarta-sans/600.css'
 import '@fontsource/plus-jakarta-sans/700.css'
 import './index.css'
 import App from './App'
+import { LALUAN_RENDER, PentasEksport } from './components/tiktok/PentasEksport'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// `#render-tiktok` hanya digunakan oleh skrip eksport video (Chromium tanpa kepala).
+const modRender = window.location.hash === LALUAN_RENDER
+
+createRoot(document.getElementById('root')!).render(<StrictMode>{modRender ? <PentasEksport /> : <App />}</StrictMode>)

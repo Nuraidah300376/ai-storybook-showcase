@@ -53,6 +53,16 @@ export function buangKodQrTersuai() {
   tetapkan(null)
 }
 
+/** Kod QR tersuai semasa (di luar React), contohnya untuk dihantar ke pemapar video. */
+export function dapatkanKodQrTersuai(): KodQrTersuai | null {
+  return semasa
+}
+
+/** Guna kod QR yang sudah disahkan di tempat lain (halaman pemaparan video). */
+export function tetapkanKodQrTersuai(k: KodQrTersuai | null) {
+  tetapkan(k)
+}
+
 function bacaDataUrl(fail: Blob): Promise<string> {
   return new Promise((lulus, gagal) => {
     const r = new FileReader()

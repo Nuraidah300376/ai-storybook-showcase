@@ -1,4 +1,4 @@
-# Panduan Ringkas Pengguna — Fasa 3
+# Panduan Ringkas Pengguna — Fasa 4
 
 ## Membuka aplikasi tanpa Node.js
 
@@ -33,7 +33,7 @@
 | Skrin penuh | Butang skrin penuh atau kekunci F |
 | Sembunyi kawalan | Butang mata atau kekunci H |
 
-Aplikasi tidak mengeksport video. Gunakan perakam skrin telefon atau komputer semasa persembahan dimainkan.
+Untuk video TikTok siap tanpa perakam skrin, gunakan **Eksport MP4** dalam mod TikTok 60 Saat — lihat bahagian di bawah.
 
 ## Persembahan TikTok 60 saat (Fasa 3)
 
@@ -48,3 +48,15 @@ Aplikasi tidak mengeksport video. Gunakan perakam skrin telefon atau komputer se
 6. Ketik skrin atau tekan H untuk memaparkan semula kawalan.
 
 Nota: skrin penuh tidak disokong oleh Safari pada iPhone; gunakan perakam skrin terus dalam paparan biasa.
+
+## Eksport Video MP4 (Fasa 4)
+
+Dapatkan video TikTok 60 saat yang siap (MP4, 1080×1920, 30 fps) tanpa merakam skrin:
+
+- **Paling mudah:** di GitHub, buka **Actions → Eksport Video TikTok → Run workflow**. Selepas ✔ hijau, muat turun artifak
+  **video-tiktok-60s**.
+- **Satu klik di komputer sendiri:** jalankan `npm run eksport:pelayan`, tekan **Eksport MP4** → **Mula Eksport MP4**,
+  tunggu bar kemajuan, kemudian **Muat Turun MP4**.
+
+Panduan penuh langkah demi langkah: [PANDUAN-EKSPORT-VIDEO.md](PANDUAN-EKSPORT-VIDEO.md).
+

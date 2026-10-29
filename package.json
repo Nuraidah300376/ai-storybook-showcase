@@ -1,7 +1,7 @@
 {
   "name": "ai-storybook-showcase",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "AI Storybook Showcase — persembahan buku cerita bergambar Amanah Kecil, Hati Besar karya Nuraidah binti Mustapah.",
   "type": "module",
   "scripts": {
@@ -10,7 +10,10 @@
     "ujian": "vitest run",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "binaan:pratonton": "tsc -b && vite build --mode pratonton"
+    "binaan:pratonton": "tsc -b && vite build --mode pratonton",
+    "eksport:pelayan": "npm run build && vite preview --open /#tiktok-60",
+    "eksport:video": "npm run build && node scripts/eksport-video.mjs && node scripts/semak-video.mjs eksport/tiktok-60s.mp4",
+    "semak:video": "node scripts/semak-video.mjs eksport/tiktok-60s.mp4"
   },
   "dependencies": {
     "@fontsource/fraunces": "^5.2.0",
@@ -24,11 +27,13 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",
+    "@types/node": "^22.20.5",
     "@types/pngjs": "^6.0.5",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "playwright": "1.63.0",
     "pngjs": "^7.0.0",
     "tailwindcss": "^4.1.0",
     "typescript": "~5.8.3",

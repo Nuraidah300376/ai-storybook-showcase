@@ -1,0 +1,85 @@
+# Eksport persembahan TikTok 60 saat kepada MP4 (Fasa 4).
+#
+# Cara guna: tab Actions → "Eksport Video TikTok" → Run workflow.
+# Selepas tanda ✔ hijau, muat turun artifak "video-tiktok-60s" (ZIP berisi
+# MP4, laporan semakan dan lembaran kenalan) di bahagian bawah halaman larian.
+name: Eksport Video TikTok
+
+on:
+  workflow_dispatch:
+    inputs:
+      kualiti:
+        description: 'Kualiti x264 (CRF): 16 = sangat tinggi, 18 = tinggi (lalai), 23 = fail lebih kecil'
+        required: false
+        default: '18'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eksport-video-tiktok
+  cancel-in-progress: false
+
+jobs:
+  eksport:
+    name: Pemaparan MP4 1080×1920 30 fps
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Ambil kod
+        uses: actions/checkout@v4
+
+      - name: Sediakan Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Pasang kebergantungan
+        run: npm ci
+
+      - name: Pasang FFmpeg dan Chromium (Playwright)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          npx playwright install --with-deps chromium
+
+      - name: Semakan TypeScript dan ujian
+        run: |
+          npm run semak
+          npm run ujian
+
+      - name: Binaan produksi
+        run: npm run build
+
+      - name: Pemaparan MP4 (bingkai demi bingkai)
+        env:
+          KUALITI: ${{ inputs.kualiti }}
+        run: node scripts/eksport-video.mjs --keluaran eksport/tiktok-60s.mp4 --crf "${KUALITI:-18}"
+
+      - name: Semak MP4 (codec, resolusi, fps, durasi, animasi, kod QR)
+        run: node scripts/semak-video.mjs eksport/tiktok-60s.mp4
+
+      - name: Ringkasan
+        if: always()
+        run: |
+          if [ -f eksport/tiktok-60s-laporan.json ]; then
+            node -e '
+              const l = require("./eksport/tiktok-60s-laporan.json");
+              const baris = ["## Eksport Video TikTok 60 saat", "", l.lulus ? "**Semua semakan lulus** ✅" : "**Ada semakan gagal** ❌", "", `Saiz: ${l.saizMb} MB · ${l.kadarBitMbps} Mbps`, "", "| Semakan | Keputusan | Butiran |", "| --- | --- | --- |", ...l.keputusan.map(k => `| ${k.nama} | ${k.lulus ? "✅" : "❌"} | ${k.butiran} |`), "", "Muat turun artifak **video-tiktok-60s** di bahagian bawah halaman ini."];
+              require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, baris.join("\n") + "\n");
+            '
+          fi
+
+      - name: Muat naik artifak MP4
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-tiktok-60s
+          path: |
+            eksport/tiktok-60s.mp4
+            eksport/tiktok-60s.json
+            eksport/tiktok-60s-laporan.json
+            eksport/tiktok-60s-lembaran.jpg
+          if-no-files-found: warn
+          retention-days: 30
